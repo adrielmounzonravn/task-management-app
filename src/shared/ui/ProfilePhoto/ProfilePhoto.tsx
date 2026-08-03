@@ -1,5 +1,6 @@
 import profilePictureDefault from './profile-picture-default.png'
+import styles from './ProfilePhoto.module.css'
 
 export function ProfilePhoto() {
-  return <img src={profilePictureDefault} alt="" />
+  return <img className={styles.photo} src={profilePictureDefault} alt="" />
 }

@@ -16,6 +16,7 @@ dist-ssr/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+.playwright-mcp/
 
 # Editor / OS
 .DS_Store
