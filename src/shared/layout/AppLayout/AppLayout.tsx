@@ -8,7 +8,7 @@ export function AppLayout() {
     <div className={styles.layout}>
       <Sidebar />
       <Topbar />
-      <main>
+      <main className={styles.main}>
         <Outlet />
       </main>
     </div>

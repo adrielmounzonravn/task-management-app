@@ -1,4 +1,23 @@
 .layout {
+  display: grid;
+  grid-template-columns: var(--layout-sidebar-width) 1fr;
+  grid-template-rows: var(--layout-topbar-height) 1fr;
+  grid-template-areas: 'sidebar topbar' 'sidebar main';
+  gap: var(--space-4);
   min-height: 100vh;
+  padding: var(--space-4);
   background-color: var(--color-background-page);
+}
+
+.main {
+  grid-area: main;
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: var(--layout-topbar-height) auto 1fr;
+    grid-template-areas: 'topbar' 'sidebar' 'main';
+  }
 }

@@ -1,6 +1,36 @@
 .topbar {
+  grid-area: topbar;
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: var(--space-4);
+  padding: 0 var(--space-4);
+  border-radius: var(--radius-large);
   background-color: var(--color-background-chrome);
+}
+
+.search {
+  flex: 1;
+  height: var(--space-8);
+  padding: 0 var(--space-4);
+  border: none;
+  border-radius: var(--radius-base);
+  background-color: var(--color-background-page);
+  color: var(--color-text-on-chrome);
+  font-family: inherit;
+  font-size: var(--font-size-body);
+}
+
+.search::placeholder {
+  color: var(--color-text-on-chrome-subdued);
+}
+
+.search:focus {
+  outline: 2px solid var(--color-accent-default);
+  outline-offset: -1px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
 }

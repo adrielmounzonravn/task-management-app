@@ -5,9 +5,11 @@ import styles from './Topbar.module.css'
 export function Topbar() {
   return (
     <header className={styles.topbar}>
-      <div />
-      <NotificationButton />
-      <ProfilePhoto />
+      <input className={styles.search} type="search" placeholder="Search" />
+      <div className={styles.actions}>
+        <NotificationButton />
+        <ProfilePhoto />
+      </div>
     </header>
   )
 }

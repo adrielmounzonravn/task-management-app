@@ -1,5 +1,32 @@
 .sidebar {
+  grid-area: sidebar;
   display: flex;
   flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border-radius: var(--radius-large);
   background-color: var(--color-background-chrome);
+}
+
+.navLink,
+.navLinkActive {
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-base);
+  border-left: 3px solid transparent;
+  font-size: var(--font-size-subheading);
+  line-height: var(--line-height-subheading);
+  font-weight: var(--font-weight-subheading);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.navLink {
+  color: var(--color-text-on-chrome-subdued);
+}
+
+.navLinkActive {
+  border-left-color: var(--color-accent-default);
+  background-color: var(--color-accent-surface);
+  color: var(--color-accent-default);
 }
