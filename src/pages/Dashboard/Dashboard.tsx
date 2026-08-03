@@ -1,3 +1,5 @@
+import { KanbanBoard } from '@/features/tasks/components/KanbanBoard/KanbanBoard'
+
 export function Dashboard() {
-  return <h1>Dashboard</h1>
+  return <KanbanBoard />
 }

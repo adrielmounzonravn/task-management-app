@@ -1,13 +1,12 @@
-import { NavLink, Outlet } from 'react-router'
+import { Outlet } from 'react-router'
+import { Sidebar } from '@/shared/layout/Sidebar/Sidebar'
+import { Topbar } from '@/shared/layout/Topbar/Topbar'
 
 export function AppLayout() {
   return (
     <div>
-      <nav>
-        <NavLink to="/">Dashboard</NavLink>
-        <NavLink to="/my-tasks">My Task</NavLink>
-        <NavLink to="/settings">Settings</NavLink>
-      </nav>
+      <Sidebar />
+      <Topbar />
       <main>
         <Outlet />
       </main>
