@@ -1,3 +1,5 @@
+import { Router } from '@/app/Router'
+
 export function App() {
-  return <p>Task Management App</p>
+  return <Router />
 }
