@@ -19,7 +19,11 @@ export const tasksFixture: Task[] = [
     status: 'BACKLOG',
     dueDate: '2026-08-15T00:00:00.000Z',
     tags: ['ANDROID'],
-    assignee: null,
+    assignee: {
+      id: '2adcaf27-5de6-4500-b795-166f482fdace',
+      fullName: 'Adriel Mounzón',
+      avatar: null,
+    },
   },
   {
     id: 'task-3',
@@ -46,7 +50,11 @@ export const tasksFixture: Task[] = [
     status: 'IN_PROGRESS',
     dueDate: '2026-08-04T00:00:00.000Z',
     tags: ['IOS', 'ANDROID'],
-    assignee: { id: 'user-4', fullName: 'Diego Ramos', avatar: null },
+    assignee: {
+      id: '2adcaf27-5de6-4500-b795-166f482fdace',
+      fullName: 'Adriel Mounzón',
+      avatar: null,
+    },
   },
   {
     id: 'task-6',
@@ -82,6 +90,10 @@ export const tasksFixture: Task[] = [
     status: 'CANCELLED',
     dueDate: '2026-07-25T00:00:00.000Z',
     tags: ['NODE_JS'],
-    assignee: null,
+    assignee: {
+      id: '2adcaf27-5de6-4500-b795-166f482fdace',
+      fullName: 'Adriel Mounzón',
+      avatar: null,
+    },
   },
 ]

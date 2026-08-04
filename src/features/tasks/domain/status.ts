@@ -12,3 +12,7 @@ export const STATUS_COLUMNS: { status: Status; label: string }[] = [
 export function getTasksByStatus(tasks: Task[], status: Status) {
   return tasks.filter((task) => task.status === status)
 }
+
+export function getTasksByAssignee(tasks: Task[], assigneeId: string) {
+  return tasks.filter((task) => task.assignee?.id === assigneeId)
+}
