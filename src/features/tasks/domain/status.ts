@@ -1,4 +1,5 @@
 import type { Status } from '@/gql/graphql'
+import type { Task } from '@/features/tasks/fixtures/tasks'
 
 export const STATUS_COLUMNS: { status: Status; label: string }[] = [
   { status: 'BACKLOG', label: 'Backlog' },
@@ -7,3 +8,7 @@ export const STATUS_COLUMNS: { status: Status; label: string }[] = [
   { status: 'DONE', label: 'Done' },
   { status: 'CANCELLED', label: 'Cancelled' },
 ]
+
+export function getTasksByStatus(tasks: Task[], status: Status) {
+  return tasks.filter((task) => task.status === status)
+}

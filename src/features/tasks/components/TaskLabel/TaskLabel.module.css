@@ -1,0 +1,33 @@
+.label {
+  display: inline-block;
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-small);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  font-weight: var(--font-weight-caption);
+}
+
+.one {
+  background-color: var(--color-decorative-surface-one);
+  color: var(--color-decorative-text-one);
+}
+
+.two {
+  background-color: var(--color-decorative-surface-two);
+  color: var(--color-decorative-text-two);
+}
+
+.three {
+  background-color: var(--color-decorative-surface-three);
+  color: var(--color-decorative-text-three);
+}
+
+.four {
+  background-color: var(--color-decorative-surface-four);
+  color: var(--color-decorative-text-four);
+}
+
+.five {
+  background-color: var(--color-decorative-surface-five);
+  color: var(--color-decorative-text-five);
+}

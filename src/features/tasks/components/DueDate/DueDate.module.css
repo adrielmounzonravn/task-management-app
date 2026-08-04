@@ -1,0 +1,6 @@
+.dueDate {
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  font-weight: var(--font-weight-caption);
+  color: var(--color-text-on-chrome-subdued);
+}
