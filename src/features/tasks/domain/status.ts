@@ -16,3 +16,10 @@ export function getTasksByStatus(tasks: Task[], status: Status) {
 export function getTasksByAssignee(tasks: Task[], assigneeId: string) {
   return tasks.filter((task) => task.assignee?.id === assigneeId)
 }
+
+export function getTasksBySearch(tasks: Task[], search: string) {
+  const normalizedSearch = search.trim().toLowerCase()
+  if (!normalizedSearch) return tasks
+
+  return tasks.filter((task) => task.name.toLowerCase().includes(normalizedSearch))
+}

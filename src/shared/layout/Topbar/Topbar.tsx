@@ -2,10 +2,21 @@ import { NotificationButton } from '@/shared/ui/NotificationButton/NotificationB
 import { ProfilePhoto } from '@/shared/ui/ProfilePhoto/ProfilePhoto'
 import styles from './Topbar.module.css'
 
-export function Topbar() {
+type TopbarProps = {
+  searchValue: string
+  onSearchChange: (value: string) => void
+}
+
+export function Topbar({ searchValue, onSearchChange }: TopbarProps) {
   return (
     <header className={styles.topbar}>
-      <input className={styles.search} type="search" placeholder="Search" />
+      <input
+        className={styles.search}
+        type="search"
+        placeholder="Search"
+        value={searchValue}
+        onChange={(event) => onSearchChange(event.currentTarget.value)}
+      />
       <div className={styles.actions}>
         <NotificationButton />
         <ProfilePhoto />
