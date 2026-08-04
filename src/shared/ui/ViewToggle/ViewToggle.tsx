@@ -1,16 +1,35 @@
 import styles from '@/shared/ui/ViewToggle/ViewToggle.module.css'
 
-export function ViewToggle() {
+type ViewToggleProps = {
+  value: 'list' | 'board'
+  onChange: (value: 'list' | 'board') => void
+}
+
+export function ViewToggle({ value, onChange }: ViewToggleProps) {
   return (
     <div className={styles.toggle}>
       <label className={styles.option}>
-        <input type="radio" name="view" value="list" className={styles.input} />
+        <input
+          type="radio"
+          name="view"
+          value="list"
+          checked={value === 'list'}
+          onChange={() => onChange('list')}
+          className={styles.input}
+        />
         <span className={styles.icon}>
           <ListIcon />
         </span>
       </label>
       <label className={styles.option}>
-        <input type="radio" name="view" value="board" defaultChecked className={styles.input} />
+        <input
+          type="radio"
+          name="view"
+          value="board"
+          checked={value === 'board'}
+          onChange={() => onChange('board')}
+          className={styles.input}
+        />
         <span className={styles.icon}>
           <BoardIcon />
         </span>

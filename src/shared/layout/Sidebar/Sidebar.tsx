@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router'
+import { NavLink, useSearchParams } from 'react-router'
 import styles from './Sidebar.module.css'
 
 function navLinkClassName({ isActive }: { isActive: boolean }) {
@@ -6,12 +6,15 @@ function navLinkClassName({ isActive }: { isActive: boolean }) {
 }
 
 export function Sidebar() {
+  const [searchParams] = useSearchParams()
+  const search = searchParams.toString()
+
   return (
     <aside className={styles.sidebar}>
-      <NavLink to="/" end className={navLinkClassName}>
+      <NavLink to={{ pathname: '/', search }} end className={navLinkClassName}>
         Dashboard
       </NavLink>
-      <NavLink to="/my-tasks" className={navLinkClassName}>
+      <NavLink to={{ pathname: '/my-tasks', search }} className={navLinkClassName}>
         My Tasks
       </NavLink>
     </aside>
