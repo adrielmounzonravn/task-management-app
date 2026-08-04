@@ -1,0 +1,17 @@
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--space-8);
+  height: var(--space-8);
+  border: none;
+  border-radius: var(--radius-base);
+  background-color: var(--color-accent-default);
+  color: var(--color-text-on-chrome);
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.button:active {
+  transform: scale(0.9);
+}
