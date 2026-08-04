@@ -1,6 +1,6 @@
 /* eslint-disable */
 import * as types from './graphql';
-import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
 /**
  * Map of all GraphQL operations in the project.
@@ -14,9 +14,11 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
 type Documents = {
+    "\n  query Profile {\n    profile {\n      id\n      fullName\n      avatar\n    }\n  }\n": typeof types.ProfileDocument,
     "\n  query Tasks($input: FilterTaskInput!) {\n    tasks(input: $input) {\n      id\n      name\n      pointEstimate\n      status\n      dueDate\n      tags\n      assignee {\n        id\n        fullName\n        avatar\n      }\n    }\n  }\n": typeof types.TasksDocument,
 };
 const documents: Documents = {
+    "\n  query Profile {\n    profile {\n      id\n      fullName\n      avatar\n    }\n  }\n": types.ProfileDocument,
     "\n  query Tasks($input: FilterTaskInput!) {\n    tasks(input: $input) {\n      id\n      name\n      pointEstimate\n      status\n      dueDate\n      tags\n      assignee {\n        id\n        fullName\n        avatar\n      }\n    }\n  }\n": types.TasksDocument,
 };
 
@@ -34,6 +36,10 @@ const documents: Documents = {
  */
 export function graphql(source: string): unknown;
 
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query Profile {\n    profile {\n      id\n      fullName\n      avatar\n    }\n  }\n"): (typeof documents)["\n  query Profile {\n    profile {\n      id\n      fullName\n      avatar\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
