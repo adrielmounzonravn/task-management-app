@@ -1,0 +1,16 @@
+.list {
+  display: grid;
+  gap: var(--space-4);
+  --task-list-columns: minmax(0, 3fr) minmax(0, 2fr) minmax(0, 1fr) minmax(0, 2fr) minmax(0, 1fr);
+}
+
+.header {
+  display: grid;
+  grid-template-columns: var(--task-list-columns);
+  gap: var(--space-3);
+  padding: 0 var(--space-3);
+  font-size: var(--font-size-subheading);
+  line-height: var(--line-height-subheading);
+  font-weight: var(--font-weight-subheading);
+  color: var(--color-text-on-chrome-subdued);
+}

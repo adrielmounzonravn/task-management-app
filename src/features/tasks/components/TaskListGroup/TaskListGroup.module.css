@@ -1,0 +1,36 @@
+.group {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.title {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0;
+  border: none;
+  background: none;
+  font-size: var(--font-size-heading);
+  line-height: var(--line-height-heading);
+  font-weight: var(--font-weight-heading);
+  color: var(--color-text-on-chrome);
+  text-align: left;
+  cursor: pointer;
+}
+
+.chevron,
+.chevronExpanded {
+  display: flex;
+  color: var(--color-text-on-chrome-subdued);
+  transition: transform 0.1s ease;
+}
+
+.chevron {
+  transform: rotate(-90deg);
+}
+
+.rows {
+  display: grid;
+  gap: var(--space-2);
+}

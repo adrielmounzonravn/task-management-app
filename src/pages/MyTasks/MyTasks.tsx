@@ -1,6 +1,6 @@
 import { Suspense } from 'react'
 import { useProfile } from '@/features/profile/api/useProfile'
-import { KanbanBoard } from '@/features/tasks/components/KanbanBoard/KanbanBoard'
+import { TaskList } from '@/features/tasks/components/TaskList/TaskList'
 import { TasksToolbar } from '@/features/tasks/components/TasksToolbar/TasksToolbar'
 import { Spinner } from '@/shared/ui/Spinner/Spinner'
 import styles from './MyTasks.module.css'
@@ -25,5 +25,5 @@ export function MyTasks() {
 function MyTasksBoard() {
   const profile = useProfile()
 
-  return <KanbanBoard assigneeId={profile.id} />
+  return <TaskList assigneeId={profile.id} />
 }

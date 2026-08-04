@@ -1,0 +1,51 @@
+.row {
+  display: grid;
+  grid-template-columns: var(--task-list-columns);
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border-left: 4px solid transparent;
+  border-radius: var(--radius-base);
+  background-color: var(--color-background-chrome);
+}
+
+.one {
+  border-left-color: var(--color-decorative-icon-one);
+}
+
+.two {
+  border-left-color: var(--color-decorative-icon-two);
+}
+
+.three {
+  border-left-color: var(--color-decorative-icon-three);
+}
+
+.four {
+  border-left-color: var(--color-decorative-icon-four);
+}
+
+.five {
+  border-left-color: var(--color-decorative-icon-five);
+}
+
+.name {
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  font-weight: var(--font-weight-body);
+  color: var(--color-text-on-chrome);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.estimate,
+.assignee {
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  font-weight: var(--font-weight-caption);
+  color: var(--color-text-on-chrome-subdued);
+}
