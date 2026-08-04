@@ -1,3 +1,4 @@
+import { NavLink } from 'react-router'
 import { NotificationButton } from '@/shared/ui/NotificationButton/NotificationButton'
 import { ProfilePhoto } from '@/shared/ui/ProfilePhoto/ProfilePhoto'
 import styles from './Topbar.module.css'
@@ -19,7 +20,9 @@ export function Topbar({ searchValue, onSearchChange }: TopbarProps) {
       />
       <div className={styles.actions}>
         <NotificationButton />
-        <ProfilePhoto />
+        <NavLink to="/settings" aria-label="Settings">
+          <ProfilePhoto />
+        </NavLink>
       </div>
     </header>
   )

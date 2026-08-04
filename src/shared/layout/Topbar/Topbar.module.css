@@ -34,3 +34,13 @@
   align-items: center;
   gap: var(--space-4);
 }
+
+.actions a {
+  display: flex;
+  border-radius: var(--radius-full);
+}
+
+.actions a:focus-visible {
+  outline: 2px solid var(--color-accent-default);
+  outline-offset: 2px;
+}

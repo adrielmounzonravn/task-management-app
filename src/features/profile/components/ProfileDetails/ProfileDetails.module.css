@@ -1,0 +1,53 @@
+.card {
+  display: grid;
+  gap: var(--space-6);
+  max-width: 480px;
+  padding: var(--space-6);
+  border-radius: var(--radius-base);
+  background-color: var(--color-background-chrome);
+  box-shadow: var(--shadow-depth-02);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.name {
+  font-size: var(--font-size-heading);
+  line-height: var(--line-height-heading);
+  font-weight: var(--font-weight-heading);
+  color: var(--color-text-on-chrome);
+}
+
+.email {
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  font-weight: var(--font-weight-body);
+  color: var(--color-text-on-chrome-subdued);
+}
+
+.fields {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.field {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.label {
+  font-size: var(--font-size-subheading);
+  line-height: var(--line-height-subheading);
+  font-weight: var(--font-weight-subheading);
+  color: var(--color-text-on-chrome-subdued);
+}
+
+.value {
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  font-weight: var(--font-weight-body);
+  color: var(--color-text-on-chrome);
+}

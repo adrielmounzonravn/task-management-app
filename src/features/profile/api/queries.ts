@@ -5,7 +5,10 @@ export const GET_PROFILE = graphql(`
     profile {
       id
       fullName
+      email
       avatar
+      type
+      createdAt
     }
   }
 `)
