@@ -1,18 +1,16 @@
 import type { Task } from '@/features/tasks/fixtures/tasks'
 import { TaskLabel } from '@/features/tasks/components/TaskLabel/TaskLabel'
 import { DueDate } from '@/features/tasks/components/DueDate/DueDate'
+import { formatDueDate } from '@/features/tasks/domain/dueDate'
 import { POINT_ESTIMATE_LABELS } from '@/features/tasks/domain/pointEstimate'
 import styles from '@/features/tasks/components/TaskListRow/TaskListRow.module.css'
 
-const ACCENT_TONES = ['one', 'two', 'three', 'four', 'five'] as const
-
 type TaskListRowProps = {
   task: Task
-  index: number
 }
 
-export function TaskListRow({ task, index }: TaskListRowProps) {
-  const tone = ACCENT_TONES[index % ACCENT_TONES.length]
+export function TaskListRow({ task }: TaskListRowProps) {
+  const { tone } = formatDueDate(task.dueDate)
 
   return (
     <div role="row" className={`${styles.row} ${styles[tone]}`}>

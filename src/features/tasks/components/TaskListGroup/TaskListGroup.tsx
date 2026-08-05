@@ -26,8 +26,8 @@ export function TaskListGroup({ label, tasks }: TaskListGroupProps) {
       </button>
       {isExpanded && (
         <div className={styles.rows}>
-          {tasks.map((task, index) => (
-            <TaskListRow key={task.id} task={task} index={index} />
+          {tasks.map((task) => (
+            <TaskListRow key={task.id} task={task} />
           ))}
         </div>
       )}

@@ -9,24 +9,16 @@
   background-color: var(--color-background-chrome);
 }
 
-.one {
-  border-left-color: var(--color-decorative-icon-one);
+.past {
+  border-left-color: var(--color-status-overdue-surface);
 }
 
-.two {
-  border-left-color: var(--color-decorative-icon-two);
+.today {
+  border-left-color: var(--color-status-today-surface);
 }
 
-.three {
-  border-left-color: var(--color-decorative-icon-three);
-}
-
-.four {
-  border-left-color: var(--color-decorative-icon-four);
-}
-
-.five {
-  border-left-color: var(--color-decorative-icon-five);
+.future {
+  border-left-color: var(--color-text-success);
 }
 
 .name {
