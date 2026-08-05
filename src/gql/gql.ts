@@ -16,12 +16,16 @@ import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-
 type Documents = {
     "\n  query Profile {\n    profile {\n      id\n      fullName\n      email\n      avatar\n      type\n      createdAt\n    }\n  }\n": typeof types.ProfileDocument,
     "\n  mutation CreateTask($input: CreateTaskInput!) {\n    createTask(input: $input) {\n      id\n      name\n      pointEstimate\n      position\n      status\n      dueDate\n      tags\n      assignee {\n        id\n        fullName\n        avatar\n      }\n    }\n  }\n": typeof types.CreateTaskDocument,
+    "\n  mutation UpdateTask($input: UpdateTaskInput!) {\n    updateTask(input: $input) {\n      id\n      name\n      pointEstimate\n      position\n      status\n      dueDate\n      tags\n      assignee {\n        id\n        fullName\n        avatar\n      }\n    }\n  }\n": typeof types.UpdateTaskDocument,
+    "\n  mutation DeleteTask($input: DeleteTaskInput!) {\n    deleteTask(input: $input) {\n      id\n    }\n  }\n": typeof types.DeleteTaskDocument,
     "\n  query Tasks($input: FilterTaskInput!) {\n    tasks(input: $input) {\n      id\n      name\n      pointEstimate\n      position\n      status\n      dueDate\n      tags\n      assignee {\n        id\n        fullName\n        avatar\n      }\n    }\n  }\n": typeof types.TasksDocument,
     "\n  query Users {\n    users {\n      id\n      fullName\n    }\n  }\n": typeof types.UsersDocument,
 };
 const documents: Documents = {
     "\n  query Profile {\n    profile {\n      id\n      fullName\n      email\n      avatar\n      type\n      createdAt\n    }\n  }\n": types.ProfileDocument,
     "\n  mutation CreateTask($input: CreateTaskInput!) {\n    createTask(input: $input) {\n      id\n      name\n      pointEstimate\n      position\n      status\n      dueDate\n      tags\n      assignee {\n        id\n        fullName\n        avatar\n      }\n    }\n  }\n": types.CreateTaskDocument,
+    "\n  mutation UpdateTask($input: UpdateTaskInput!) {\n    updateTask(input: $input) {\n      id\n      name\n      pointEstimate\n      position\n      status\n      dueDate\n      tags\n      assignee {\n        id\n        fullName\n        avatar\n      }\n    }\n  }\n": types.UpdateTaskDocument,
+    "\n  mutation DeleteTask($input: DeleteTaskInput!) {\n    deleteTask(input: $input) {\n      id\n    }\n  }\n": types.DeleteTaskDocument,
     "\n  query Tasks($input: FilterTaskInput!) {\n    tasks(input: $input) {\n      id\n      name\n      pointEstimate\n      position\n      status\n      dueDate\n      tags\n      assignee {\n        id\n        fullName\n        avatar\n      }\n    }\n  }\n": types.TasksDocument,
     "\n  query Users {\n    users {\n      id\n      fullName\n    }\n  }\n": types.UsersDocument,
 };
@@ -48,6 +52,14 @@ export function graphql(source: "\n  query Profile {\n    profile {\n      id\n 
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation CreateTask($input: CreateTaskInput!) {\n    createTask(input: $input) {\n      id\n      name\n      pointEstimate\n      position\n      status\n      dueDate\n      tags\n      assignee {\n        id\n        fullName\n        avatar\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation CreateTask($input: CreateTaskInput!) {\n    createTask(input: $input) {\n      id\n      name\n      pointEstimate\n      position\n      status\n      dueDate\n      tags\n      assignee {\n        id\n        fullName\n        avatar\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation UpdateTask($input: UpdateTaskInput!) {\n    updateTask(input: $input) {\n      id\n      name\n      pointEstimate\n      position\n      status\n      dueDate\n      tags\n      assignee {\n        id\n        fullName\n        avatar\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation UpdateTask($input: UpdateTaskInput!) {\n    updateTask(input: $input) {\n      id\n      name\n      pointEstimate\n      position\n      status\n      dueDate\n      tags\n      assignee {\n        id\n        fullName\n        avatar\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation DeleteTask($input: DeleteTaskInput!) {\n    deleteTask(input: $input) {\n      id\n    }\n  }\n"): (typeof documents)["\n  mutation DeleteTask($input: DeleteTaskInput!) {\n    deleteTask(input: $input) {\n      id\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

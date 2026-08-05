@@ -1,5 +1,6 @@
 import { useForm } from 'react-hook-form'
 import { useCreateTask } from '@/features/tasks/api/useCreateTask'
+import { useUpdateTask } from '@/features/tasks/api/useUpdateTask'
 import { AssigneeField } from '@/features/tasks/components/TaskFormModal/AssigneeField'
 import { TaskLabel } from '@/features/tasks/components/TaskLabel/TaskLabel'
 import { POINT_ESTIMATE_LABELS } from '@/features/tasks/domain/pointEstimate'
@@ -34,7 +35,9 @@ type TaskFormModalProps = {
 }
 
 export function TaskFormModal({ open, onClose, task }: TaskFormModalProps) {
-  const { createTask, loading } = useCreateTask()
+  const { createTask, loading: creating } = useCreateTask()
+  const { updateTask, loading: updating } = useUpdateTask()
+  const loading = creating || updating
   const { register, handleSubmit, watch, setValue, reset } = useForm<FormValues>({
     defaultValues: {
       name: task?.name ?? '',
@@ -61,14 +64,25 @@ export function TaskFormModal({ open, onClose, task }: TaskFormModalProps) {
   }
 
   async function onSubmit(values: FormValues) {
-    await createTask({
-      name: values.name,
-      pointEstimate: values.pointEstimate ?? 'ONE',
-      status: 'BACKLOG',
-      tags: values.tags,
-      assigneeId: values.assigneeId,
-      dueDate: new Date(values.dueDate).toISOString(),
-    })
+    if (task) {
+      await updateTask({
+        id: task.id,
+        name: values.name,
+        pointEstimate: values.pointEstimate,
+        tags: values.tags,
+        assigneeId: values.assigneeId,
+        dueDate: new Date(values.dueDate).toISOString(),
+      })
+    } else {
+      await createTask({
+        name: values.name,
+        pointEstimate: values.pointEstimate ?? 'ONE',
+        status: 'BACKLOG',
+        tags: values.tags,
+        assigneeId: values.assigneeId,
+        dueDate: new Date(values.dueDate).toISOString(),
+      })
+    }
     handleClose()
   }
 

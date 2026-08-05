@@ -7,6 +7,7 @@ import { ProfilePhoto } from '@/shared/ui/ProfilePhoto/ProfilePhoto'
 import { Dropdown } from '@/shared/ui/Dropdown/Dropdown'
 import { TaskOptionsIcon, EditIcon, DeleteIcon } from '@/shared/ui/icons'
 import { POINT_ESTIMATE_LABELS } from '@/features/tasks/domain/pointEstimate'
+import { useDeleteTask } from '@/features/tasks/api/useDeleteTask'
 import styles from '@/features/tasks/components/TaskCard/TaskCard.module.css'
 
 type TaskCardProps = {
@@ -14,6 +15,7 @@ type TaskCardProps = {
 }
 
 export function TaskCard({ task }: TaskCardProps) {
+  const { deleteTask } = useDeleteTask()
   const [isEditOpen, setEditOpen] = useState(false)
 
   return (
@@ -43,7 +45,10 @@ export function TaskCard({ task }: TaskCardProps) {
                 <button
                   type="button"
                   className={`${styles.menuItem} ${styles.menuItemDanger}`}
-                  onClick={close}
+                  onClick={() => {
+                    close()
+                    deleteTask(task.id)
+                  }}
                 >
                   <DeleteIcon />
                   Delete
