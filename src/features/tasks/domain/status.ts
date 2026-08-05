@@ -10,5 +10,5 @@ export const STATUS_COLUMNS: { status: Status; label: string }[] = [
 ]
 
 export function getTasksByStatus(tasks: Task[], status: Status) {
-  return tasks.filter((task) => task.status === status)
+  return tasks.filter((task) => task.status === status).sort((a, b) => b.position - a.position)
 }

@@ -6,6 +6,7 @@ export const CREATE_TASK = graphql(`
       id
       name
       pointEstimate
+      position
       status
       dueDate
       tags
