@@ -1,11 +1,6 @@
 import { TaskListGroup } from '@/features/tasks/components/TaskListGroup/TaskListGroup'
-import {
-  STATUS_COLUMNS,
-  getTasksByAssignee,
-  getTasksBySearch,
-  getTasksByStatus,
-} from '@/features/tasks/domain/status'
-import { tasksFixture } from '@/features/tasks/fixtures/tasks'
+import { STATUS_COLUMNS, getTasksByStatus } from '@/features/tasks/domain/status'
+import { useTasks } from '@/features/tasks/api/useTasks'
 import { useTaskSearch } from '@/features/tasks/useTaskSearch'
 import styles from '@/features/tasks/components/TaskList/TaskList.module.css'
 
@@ -15,8 +10,7 @@ type TaskListProps = {
 
 export function TaskList({ assigneeId }: TaskListProps) {
   const search = useTaskSearch()
-  const tasksByAssignee = assigneeId ? getTasksByAssignee(tasksFixture, assigneeId) : tasksFixture
-  const tasks = getTasksBySearch(tasksByAssignee, search)
+  const tasks = useTasks({ name: search || undefined, assigneeId })
 
   return (
     <div role="table" className={styles.list}>

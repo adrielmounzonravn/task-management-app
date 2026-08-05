@@ -1,11 +1,6 @@
 import { TaskColumn } from '@/features/tasks/components/TaskColumn/TaskColumn'
-import {
-  STATUS_COLUMNS,
-  getTasksByAssignee,
-  getTasksBySearch,
-  getTasksByStatus,
-} from '@/features/tasks/domain/status'
-import { tasksFixture } from '@/features/tasks/fixtures/tasks'
+import { STATUS_COLUMNS, getTasksByStatus } from '@/features/tasks/domain/status'
+import { useTasks } from '@/features/tasks/api/useTasks'
 import { useTaskSearch } from '@/features/tasks/useTaskSearch'
 import styles from '@/features/tasks/components/KanbanBoard/KanbanBoard.module.css'
 
@@ -15,8 +10,7 @@ type KanbanBoardProps = {
 
 export function KanbanBoard({ assigneeId }: KanbanBoardProps) {
   const search = useTaskSearch()
-  const tasksByAssignee = assigneeId ? getTasksByAssignee(tasksFixture, assigneeId) : tasksFixture
-  const tasks = getTasksBySearch(tasksByAssignee, search)
+  const tasks = useTasks({ name: search || undefined, assigneeId })
 
   return (
     <div className={styles.board}>

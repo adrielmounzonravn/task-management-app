@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test'
 import { tasksFixture } from '../src/features/tasks/fixtures/tasks'
+import { mockTasksQuery } from './mocks/graphql'
 
 const shortNameTask = tasksFixture.find((task) => task.id === 'task-12')
 const longNameTask = tasksFixture.find((task) => task.id === 'task-11')
@@ -13,11 +14,13 @@ function exactly(text: string) {
 }
 
 test.beforeEach(async ({ page }) => {
+  await mockTasksQuery(page)
   await page.goto('/')
 })
 
 test('all task cards render at the same fixed size', async ({ page }) => {
   const cards = page.getByTestId('task-card')
+  await expect(cards.first()).toBeVisible()
   const count = await cards.count()
   expect(count).toBeGreaterThan(1)
 
