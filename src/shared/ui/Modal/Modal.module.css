@@ -11,7 +11,7 @@
 
 .dialog {
   width: 100%;
-  max-width: 480px;
+  max-width: 640px;
   max-height: calc(100vh - var(--space-8));
   overflow-y: auto;
   background: var(--color-background-chrome);
