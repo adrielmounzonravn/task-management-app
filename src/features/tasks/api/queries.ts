@@ -17,3 +17,12 @@ export const GET_TASKS = graphql(`
     }
   }
 `)
+
+export const GET_USERS = graphql(`
+  query Users {
+    users {
+      id
+      fullName
+    }
+  }
+`)
