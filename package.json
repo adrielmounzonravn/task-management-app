@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit",
     "codegen": "graphql-codegen --config codegen.ts",
     "lint": "eslint .",
+    "test": "playwright test --project=mocked",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "prepare": "husky"
@@ -34,6 +35,7 @@
     "@eslint/js": "^10.0.1",
     "@graphql-codegen/cli": "^7.2.0",
     "@graphql-codegen/client-preset": "^6.1.0",
+    "@playwright/test": "^1.62.1",
     "@types/node": "^24.13.3",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
