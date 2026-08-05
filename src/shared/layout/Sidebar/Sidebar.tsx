@@ -1,4 +1,5 @@
 import { NavLink, useSearchParams } from 'react-router'
+import { BoardIcon, ListIcon, RavnLogoIcon } from '@/shared/ui/icons'
 import styles from './Sidebar.module.css'
 
 function navLinkClassName({ isActive }: { isActive: boolean }) {
@@ -11,10 +12,15 @@ export function Sidebar() {
 
   return (
     <aside className={styles.sidebar}>
+      <span className={styles.logo}>
+        <RavnLogoIcon />
+      </span>
       <NavLink to={{ pathname: '/', search }} end className={navLinkClassName}>
+        <BoardIcon />
         Dashboard
       </NavLink>
       <NavLink to={{ pathname: '/my-tasks', search }} className={navLinkClassName}>
+        <ListIcon />
         My Tasks
       </NavLink>
     </aside>

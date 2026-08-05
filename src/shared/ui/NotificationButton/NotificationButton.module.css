@@ -1,0 +1,14 @@
+.button {
+  display: flex;
+  border: none;
+  background: none;
+  padding: 0;
+  color: var(--color-text-on-chrome-subdued);
+  cursor: pointer;
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--color-accent-default);
+  outline-offset: 2px;
+  border-radius: var(--radius-full);
+}

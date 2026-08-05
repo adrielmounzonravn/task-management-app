@@ -8,8 +8,18 @@
   background-color: var(--color-background-chrome);
 }
 
+.logo {
+  display: flex;
+  align-self: center;
+  color: var(--color-text-on-chrome);
+  margin-bottom: var(--space-4);
+}
+
 .navLink,
 .navLinkActive {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-base);
   border-left: 3px solid transparent;

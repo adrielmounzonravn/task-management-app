@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router'
 import { NotificationButton } from '@/shared/ui/NotificationButton/NotificationButton'
 import { ProfilePhoto } from '@/shared/ui/ProfilePhoto/ProfilePhoto'
+import { SearchIcon } from '@/shared/ui/icons'
 import styles from './Topbar.module.css'
 
 type TopbarProps = {
@@ -11,13 +12,18 @@ type TopbarProps = {
 export function Topbar({ searchValue, onSearchChange }: TopbarProps) {
   return (
     <header className={styles.topbar}>
-      <input
-        className={styles.search}
-        type="search"
-        placeholder="Search"
-        value={searchValue}
-        onChange={(event) => onSearchChange(event.currentTarget.value)}
-      />
+      <div className={styles.searchWrapper}>
+        <span className={styles.searchIcon}>
+          <SearchIcon />
+        </span>
+        <input
+          className={styles.search}
+          type="search"
+          placeholder="Search"
+          value={searchValue}
+          onChange={(event) => onSearchChange(event.currentTarget.value)}
+        />
+      </div>
       <div className={styles.actions}>
         <NotificationButton />
         <NavLink to="/settings" aria-label="Settings">
