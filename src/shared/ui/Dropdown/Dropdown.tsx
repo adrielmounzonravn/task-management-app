@@ -85,17 +85,24 @@ export function Dropdown({ children }: DropdownProps) {
 
 type DropdownTriggerProps = {
   children: ReactNode
+  className?: string
+  'aria-label'?: string
 }
 
-Dropdown.Trigger = function DropdownTrigger({ children }: DropdownTriggerProps) {
+Dropdown.Trigger = function DropdownTrigger({
+  children,
+  className,
+  'aria-label': ariaLabel,
+}: DropdownTriggerProps) {
   const { open, setOpen, triggerRef } = useDropdownContext()
 
   return (
     <button
       ref={triggerRef}
       type="button"
-      className={styles.trigger}
+      className={className ?? styles.trigger}
       aria-expanded={open}
+      aria-label={ariaLabel}
       onClick={() => setOpen(!open)}
     >
       {children}

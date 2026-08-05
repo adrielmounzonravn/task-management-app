@@ -2,7 +2,8 @@ import type { Task } from '@/features/tasks/fixtures/tasks'
 import { TaskLabel } from '@/features/tasks/components/TaskLabel/TaskLabel'
 import { DueDate } from '@/features/tasks/components/DueDate/DueDate'
 import { ProfilePhoto } from '@/shared/ui/ProfilePhoto/ProfilePhoto'
-import { TaskOptionsIcon } from '@/shared/ui/icons'
+import { Dropdown } from '@/shared/ui/Dropdown/Dropdown'
+import { TaskOptionsIcon, EditIcon, DeleteIcon } from '@/shared/ui/icons'
 import { POINT_ESTIMATE_LABELS } from '@/features/tasks/domain/pointEstimate'
 import styles from '@/features/tasks/components/TaskCard/TaskCard.module.css'
 
@@ -17,9 +18,29 @@ export function TaskCard({ task }: TaskCardProps) {
         <span className={styles.name} data-testid="task-card-name" title={task.name}>
           {task.name}
         </span>
-        <button type="button" className={styles.options} aria-label="Task options">
-          <TaskOptionsIcon />
-        </button>
+        <Dropdown>
+          <Dropdown.Trigger className={styles.options} aria-label="Task options">
+            <TaskOptionsIcon />
+          </Dropdown.Trigger>
+          <Dropdown.Panel>
+            {(close) => (
+              <>
+                <button type="button" className={styles.menuItem} onClick={close}>
+                  <EditIcon />
+                  Edit
+                </button>
+                <button
+                  type="button"
+                  className={`${styles.menuItem} ${styles.menuItemDanger}`}
+                  onClick={close}
+                >
+                  <DeleteIcon />
+                  Delete
+                </button>
+              </>
+            )}
+          </Dropdown.Panel>
+        </Dropdown>
       </div>
       <div className={styles.meta}>
         <span className={styles.points}>{POINT_ESTIMATE_LABELS[task.pointEstimate]}</span>
