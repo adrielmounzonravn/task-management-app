@@ -1,11 +1,18 @@
+import { ClockIcon } from '@/shared/ui/icons'
+import { formatDueDate } from '@/features/tasks/domain/dueDate'
 import styles from '@/features/tasks/components/DueDate/DueDate.module.css'
 
 type DueDateProps = {
   dueDate: string
 }
 
-const formatter = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' })
-
 export function DueDate({ dueDate }: DueDateProps) {
-  return <span className={styles.dueDate}>{formatter.format(new Date(dueDate))}</span>
+  const { label, tone } = formatDueDate(dueDate)
+
+  return (
+    <span className={`${styles.dueDate} ${styles[tone]}`}>
+      <ClockIcon />
+      {label}
+    </span>
+  )
 }

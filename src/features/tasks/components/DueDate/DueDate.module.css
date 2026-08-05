@@ -1,6 +1,33 @@
 .dueDate {
-  font-size: var(--font-size-caption);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-full);
+  font-size: 11px;
   line-height: var(--line-height-caption);
-  font-weight: var(--font-weight-caption);
-  color: var(--color-text-on-chrome-subdued);
+  font-weight: var(--font-weight-subheading);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.dueDate svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.past {
+  background-color: var(--color-status-overdue-surface);
+  color: var(--color-status-overdue-text);
+}
+
+.today {
+  background-color: var(--color-status-today-surface);
+  color: var(--color-status-today-text);
+}
+
+.future {
+  background-color: var(--color-status-upcoming-surface);
+  color: var(--color-status-upcoming-text);
 }

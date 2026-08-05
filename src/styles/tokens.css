@@ -96,4 +96,13 @@
   --color-accent-surface: rgba(255, 101, 81, 0.12);
   --color-text-on-chrome: #ffffff;
   --color-text-on-chrome-subdued: #8b8f94;
+  --color-background-chrome-elevated: #3a3d42;
+
+  /* Status (due date indicator on the Task Card) */
+  --color-status-overdue-surface: var(--color-interactive-critical);
+  --color-status-overdue-text: var(--color-text-on-chrome);
+  --color-status-today-surface: var(--color-decorative-surface-one);
+  --color-status-today-text: var(--color-decorative-text-one);
+  --color-status-upcoming-surface: var(--color-background-chrome-elevated);
+  --color-status-upcoming-text: var(--color-text-on-chrome-subdued);
 }
