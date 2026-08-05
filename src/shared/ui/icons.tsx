@@ -118,6 +118,28 @@ export function LabelIcon() {
   )
 }
 
+export function ChevronLeftIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+      <path
+        d="M15.4099 7.41L14 6L8 12L14 18L15.4099 16.59L10.83 12L15.4099 7.41Z"
+        fill="currentColor"
+      />
+    </svg>
+  )
+}
+
+export function ChevronRightIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+      <path
+        d="M8.58997 16.59L10 18L16 12L10 6L8.58997 7.41L13.17 12L8.58997 16.59Z"
+        fill="currentColor"
+      />
+    </svg>
+  )
+}
+
 export function DueDateIcon() {
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
