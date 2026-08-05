@@ -1,4 +1,6 @@
+import { useState } from 'react'
 import type { Task } from '@/features/tasks/fixtures/tasks'
+import { TaskFormModal } from '@/features/tasks/components/TaskFormModal/TaskFormModal'
 import { TaskLabel } from '@/features/tasks/components/TaskLabel/TaskLabel'
 import { DueDate } from '@/features/tasks/components/DueDate/DueDate'
 import { ProfilePhoto } from '@/shared/ui/ProfilePhoto/ProfilePhoto'
@@ -12,6 +14,8 @@ type TaskCardProps = {
 }
 
 export function TaskCard({ task }: TaskCardProps) {
+  const [isEditOpen, setEditOpen] = useState(false)
+
   return (
     <div className={styles.card} data-testid="task-card">
       <div className={styles.header}>
@@ -25,7 +29,14 @@ export function TaskCard({ task }: TaskCardProps) {
           <Dropdown.Panel>
             {(close) => (
               <>
-                <button type="button" className={styles.menuItem} onClick={close}>
+                <button
+                  type="button"
+                  className={styles.menuItem}
+                  onClick={() => {
+                    close()
+                    setEditOpen(true)
+                  }}
+                >
                   <EditIcon />
                   Edit
                 </button>
@@ -55,6 +66,7 @@ export function TaskCard({ task }: TaskCardProps) {
         <ProfilePhoto size="sm" />
         <span className={styles.assignee}>{task.assignee?.fullName ?? 'Unassigned'}</span>
       </div>
+      {isEditOpen && <TaskFormModal task={task} open onClose={() => setEditOpen(false)} />}
     </div>
   )
 }
