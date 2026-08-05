@@ -1,0 +1,31 @@
+.root {
+  position: relative;
+}
+
+.trigger {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  border: none;
+  border-radius: var(--radius-base);
+  background: var(--color-background-chrome-elevated);
+  color: var(--color-text-on-chrome);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  padding: var(--space-3);
+  cursor: pointer;
+  text-align: left;
+}
+
+.panel {
+  position: absolute;
+  top: calc(100% + var(--space-1));
+  left: 0;
+  min-width: 100%;
+  background: var(--color-background-chrome-elevated);
+  border-radius: var(--radius-base);
+  box-shadow: var(--shadow-depth-03);
+  padding: var(--space-2);
+  z-index: 10;
+}
