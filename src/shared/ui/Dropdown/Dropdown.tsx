@@ -1,10 +1,22 @@
-import { createContext, useContext, useEffect, useRef, useState } from 'react'
-import type { ReactNode } from 'react'
+import { createContext, useContext, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import type { ReactNode, RefObject } from 'react'
+import { createPortal } from 'react-dom'
 import styles from '@/shared/ui/Dropdown/Dropdown.module.css'
+
+const PANEL_ATTRIBUTE = 'data-dropdown-panel'
+
+const openDropdowns = new Set<(open: boolean) => void>()
+
+function closeOtherDropdowns(current: (open: boolean) => void) {
+  openDropdowns.forEach((setOpen) => {
+    if (setOpen !== current) setOpen(false)
+  })
+}
 
 type DropdownContextValue = {
   open: boolean
   setOpen: (open: boolean) => void
+  triggerRef: RefObject<HTMLButtonElement | null>
 }
 
 const DropdownContext = createContext<DropdownContextValue | null>(null)
@@ -22,16 +34,32 @@ type DropdownProps = {
 }
 
 export function Dropdown({ children }: DropdownProps) {
-  const [open, setOpen] = useState(false)
+  const [open, setOpenState] = useState(false)
   const rootRef = useRef<HTMLDivElement>(null)
+  const triggerRef = useRef<HTMLButtonElement>(null)
+
+  function setOpen(next: boolean) {
+    if (next) closeOtherDropdowns(setOpenState)
+    setOpenState(next)
+  }
+
+  useEffect(() => {
+    if (!open) return
+
+    openDropdowns.add(setOpenState)
+    return () => {
+      openDropdowns.delete(setOpenState)
+    }
+  }, [open])
 
   useEffect(() => {
     if (!open) return
 
     function handlePointerDown(event: MouseEvent) {
-      if (rootRef.current && !rootRef.current.contains(event.target as Node)) {
-        setOpen(false)
-      }
+      const target = event.target as Element
+      if (rootRef.current?.contains(target)) return
+      if (target.closest(`[${PANEL_ATTRIBUTE}]`)) return
+      setOpen(false)
     }
 
     function handleKeyDown(event: KeyboardEvent) {
@@ -47,7 +75,7 @@ export function Dropdown({ children }: DropdownProps) {
   }, [open])
 
   return (
-    <DropdownContext.Provider value={{ open, setOpen }}>
+    <DropdownContext.Provider value={{ open, setOpen, triggerRef }}>
       <div className={styles.root} ref={rootRef}>
         {children}
       </div>
@@ -60,10 +88,11 @@ type DropdownTriggerProps = {
 }
 
 Dropdown.Trigger = function DropdownTrigger({ children }: DropdownTriggerProps) {
-  const { open, setOpen } = useDropdownContext()
+  const { open, setOpen, triggerRef } = useDropdownContext()
 
   return (
     <button
+      ref={triggerRef}
       type="button"
       className={styles.trigger}
       aria-expanded={open}
@@ -75,17 +104,44 @@ Dropdown.Trigger = function DropdownTrigger({ children }: DropdownTriggerProps) 
 }
 
 type DropdownPanelProps = {
-  children: ReactNode
+  children: ReactNode | ((close: () => void) => ReactNode)
 }
 
 Dropdown.Panel = function DropdownPanel({ children }: DropdownPanelProps) {
-  const { open } = useDropdownContext()
+  const { open, setOpen, triggerRef } = useDropdownContext()
+  const [position, setPosition] = useState<{ top: number; left: number } | null>(null)
 
-  if (!open) return null
+  useLayoutEffect(() => {
+    if (!open) return
 
-  return (
-    <div className={styles.panel} role="listbox">
-      {children}
-    </div>
+    function updatePosition() {
+      const rect = triggerRef.current?.getBoundingClientRect()
+      if (!rect) return
+      setPosition({ top: rect.bottom + 4, left: rect.left })
+    }
+
+    updatePosition()
+    window.addEventListener('scroll', updatePosition, true)
+    window.addEventListener('resize', updatePosition)
+    return () => {
+      window.removeEventListener('scroll', updatePosition, true)
+      window.removeEventListener('resize', updatePosition)
+    }
+  }, [open, triggerRef])
+
+  if (!open || !position) return null
+
+  const content = typeof children === 'function' ? children(() => setOpen(false)) : children
+
+  return createPortal(
+    <div
+      {...{ [PANEL_ATTRIBUTE]: true }}
+      className={styles.panel}
+      role="listbox"
+      style={{ top: position.top, left: position.left }}
+    >
+      {content}
+    </div>,
+    document.body,
   )
 }

@@ -1,31 +1,36 @@
 .root {
   position: relative;
+  display: inline-flex;
 }
 
 .trigger {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  width: 100%;
+  width: auto;
   border: none;
-  border-radius: var(--radius-base);
+  border-radius: var(--radius-full);
   background: var(--color-background-chrome-elevated);
   color: var(--color-text-on-chrome);
   font-size: var(--font-size-body);
   line-height: var(--line-height-body);
-  padding: var(--space-3);
+  padding: var(--space-2) var(--space-3);
   cursor: pointer;
   text-align: left;
+  white-space: nowrap;
+}
+
+.trigger svg {
+  width: 18px;
+  height: 18px;
 }
 
 .panel {
-  position: absolute;
-  top: calc(100% + var(--space-1));
-  left: 0;
-  min-width: 100%;
+  position: fixed;
+  min-width: max-content;
   background: var(--color-background-chrome-elevated);
-  border-radius: var(--radius-base);
+  border-radius: var(--radius-large);
   box-shadow: var(--shadow-depth-03);
   padding: var(--space-2);
-  z-index: 10;
+  z-index: 200;
 }
