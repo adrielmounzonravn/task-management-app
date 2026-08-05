@@ -1,15 +1,16 @@
 import { useForm } from 'react-hook-form'
 import { useCreateTask } from '@/features/tasks/api/useCreateTask'
-import { AssigneeField } from '@/features/tasks/components/CreateTaskModal/AssigneeField'
+import { AssigneeField } from '@/features/tasks/components/TaskFormModal/AssigneeField'
 import { TaskLabel } from '@/features/tasks/components/TaskLabel/TaskLabel'
 import { POINT_ESTIMATE_LABELS } from '@/features/tasks/domain/pointEstimate'
 import { TAG_LABELS } from '@/features/tasks/domain/tags'
+import type { Task } from '@/features/tasks/fixtures/tasks'
 import { DatePicker } from '@/shared/ui/DatePicker/DatePicker'
 import { Dropdown } from '@/shared/ui/Dropdown/Dropdown'
 import { Modal } from '@/shared/ui/Modal/Modal'
 import { EstimateIcon, LabelIcon } from '@/shared/ui/icons'
 import type { PointEstimate, TaskTag } from '@/gql/graphql'
-import styles from '@/features/tasks/components/CreateTaskModal/CreateTaskModal.module.css'
+import styles from '@/features/tasks/components/TaskFormModal/TaskFormModal.module.css'
 
 const POINT_ESTIMATE_OPTIONS = Object.keys(POINT_ESTIMATE_LABELS) as PointEstimate[]
 const TAG_OPTIONS = Object.keys(TAG_LABELS) as TaskTag[]
@@ -22,24 +23,25 @@ type FormValues = {
   dueDate: string
 }
 
-function defaultDueDate() {
-  return new Date().toISOString().slice(0, 10)
+function defaultDueDate(task: Task | undefined) {
+  return task ? task.dueDate.slice(0, 10) : new Date().toISOString().slice(0, 10)
 }
 
-type CreateTaskModalProps = {
+type TaskFormModalProps = {
   open: boolean
   onClose: () => void
+  task?: Task
 }
 
-export function CreateTaskModal({ open, onClose }: CreateTaskModalProps) {
+export function TaskFormModal({ open, onClose, task }: TaskFormModalProps) {
   const { createTask, loading } = useCreateTask()
   const { register, handleSubmit, watch, setValue, reset } = useForm<FormValues>({
     defaultValues: {
-      name: '',
-      pointEstimate: undefined,
-      tags: [],
-      assigneeId: undefined,
-      dueDate: defaultDueDate(),
+      name: task?.name ?? '',
+      pointEstimate: task?.pointEstimate,
+      tags: task?.tags ?? [],
+      assigneeId: task?.assignee?.id,
+      dueDate: defaultDueDate(task),
     },
   })
 
@@ -71,10 +73,10 @@ export function CreateTaskModal({ open, onClose }: CreateTaskModalProps) {
   }
 
   return (
-    <Modal open={open} onClose={handleClose} labelledBy="create-task-title">
+    <Modal open={open} onClose={handleClose} labelledBy="task-modal-title">
       <form onSubmit={handleSubmit(onSubmit)}>
         <input
-          id="create-task-title"
+          id="task-modal-title"
           className={styles.title}
           placeholder="Task Title"
           autoFocus
@@ -151,7 +153,7 @@ export function CreateTaskModal({ open, onClose }: CreateTaskModalProps) {
             Cancel
           </button>
           <button type="submit" className={styles.submit} disabled={!name.trim() || loading}>
-            Create
+            {task ? 'Update' : 'Create'}
           </button>
         </div>
       </form>
