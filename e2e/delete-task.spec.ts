@@ -1,0 +1,69 @@
+import { expect, test } from '@playwright/test'
+import type { Page } from '@playwright/test'
+import { tasksFixture } from '../src/features/tasks/fixtures/tasks'
+import { mockDeleteTaskMutation, mockTasksQuery } from './mocks/graphql'
+
+const deletableTask = tasksFixture.find((task) => task.id === 'task-1')
+
+if (!deletableTask) {
+  throw new Error('Expected fixture task-1 to exist')
+}
+
+function exactly(text: string) {
+  return new RegExp(`^${text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`)
+}
+
+test.beforeEach(async ({ page }) => {
+  await mockTasksQuery(page)
+  await page.goto('/')
+})
+
+function cardNameLocator(page: Page, taskName: string) {
+  return page.getByTestId('task-card-name').filter({ hasText: exactly(taskName) })
+}
+
+async function clickDelete(page: Page, taskName: string) {
+  const card = page.getByTestId('task-card').filter({ has: cardNameLocator(page, taskName) })
+  await card.getByRole('button', { name: 'Task options' }).click()
+  await page.getByRole('button', { name: 'Delete' }).click()
+}
+
+test('deleting a task removes its card from the board', async ({ page }) => {
+  await expect(cardNameLocator(page, deletableTask.name)).toBeVisible()
+  const totalCards = await page.getByTestId('task-card').count()
+
+  await mockDeleteTaskMutation(page, { deleteTask: { id: deletableTask.id } })
+
+  // There is no confirmation modal: clicking "Delete" fires the mutation immediately.
+  await clickDelete(page, deletableTask.name)
+
+  await expect(cardNameLocator(page, deletableTask.name)).toHaveCount(0)
+  await expect(page.getByTestId('task-card')).toHaveCount(totalCards - 1)
+})
+
+test('deleting a task does not affect other cards on the board', async ({ page }) => {
+  const otherTask = tasksFixture.find((task) => task.id === 'task-2')
+  if (!otherTask) {
+    throw new Error('Expected fixture task-2 to exist')
+  }
+
+  await mockDeleteTaskMutation(page, { deleteTask: { id: deletableTask.id } })
+
+  await clickDelete(page, deletableTask.name)
+
+  await expect(cardNameLocator(page, deletableTask.name)).toHaveCount(0)
+  await expect(cardNameLocator(page, otherTask.name)).toBeVisible()
+})
+
+test('a server error on delete keeps the card on the board', async ({ page }) => {
+  await mockDeleteTaskMutation(page, {
+    errors: [{ message: 'Internal server error' }],
+  })
+
+  await clickDelete(page, deletableTask.name)
+
+  // useDeleteTask's `update` callback only runs on a successful mutation response, so a
+  // rejected mutation never calls `cache.evict`. There's no error handling or optimistic
+  // removal, so the card is expected to remain exactly as it was.
+  await expect(cardNameLocator(page, deletableTask.name)).toBeVisible()
+})

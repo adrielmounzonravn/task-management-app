@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test'
-import type { TasksQuery, UpdateTaskMutation } from '../../src/gql/graphql'
+import type { DeleteTaskMutation, TasksQuery, UpdateTaskMutation } from '../../src/gql/graphql'
 import { tasksFixture } from '../../src/features/tasks/fixtures/tasks'
 
 const GRAPHQL_ENDPOINT = '**/graphql'
@@ -54,6 +54,34 @@ export async function mockUpdateTaskMutation(
 
     await route.fulfill({
       json: { data: { updateTask: withTaskTypename(response.updateTask) } },
+    })
+  })
+}
+
+export async function mockDeleteTaskMutation(
+  page: Page,
+  response: DeleteTaskMutation | { errors: GraphQLError[] },
+) {
+  await page.route(GRAPHQL_ENDPOINT, async (route) => {
+    const request = route.request()
+    const body = request.postDataJSON() as { operationName?: string }
+
+    if (body.operationName !== 'DeleteTask') {
+      await route.fallback()
+      return
+    }
+
+    if ('errors' in response) {
+      await route.fulfill({ json: { errors: response.errors } })
+      return
+    }
+
+    // useDeleteTask's `update` callback calls `cache.identify(deleted)` to build the
+    // `Task:<id>` cache key to evict. `cache.identify` needs both `__typename` and `id`, so
+    // (like `withTaskTypename` above) we have to add `__typename` back by hand here too —
+    // the real HttpLink would have requested it from the server automatically.
+    await route.fulfill({
+      json: { data: { deleteTask: { ...response.deleteTask, __typename: 'Task' as const } } },
     })
   })
 }
