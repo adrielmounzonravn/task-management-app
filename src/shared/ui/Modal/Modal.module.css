@@ -1,0 +1,22 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  padding: var(--space-4);
+  z-index: 100;
+}
+
+.dialog {
+  width: 100%;
+  max-width: 480px;
+  max-height: calc(100vh - var(--space-8));
+  overflow-y: auto;
+  background: var(--color-background-chrome);
+  color: var(--color-text-on-chrome);
+  border-radius: var(--radius-large);
+  box-shadow: var(--shadow-depth-05);
+  padding: var(--space-6);
+}
