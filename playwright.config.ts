@@ -18,6 +18,12 @@ export default defineConfig({
   projects: [
     {
       name: 'mocked',
+      testIgnore: /\.live\.spec\.ts$/,
+      use: { ...devices['Desktop Chrome'] },
+    },
+    {
+      name: 'live',
+      testMatch: /\.live\.spec\.ts$/,
       use: { ...devices['Desktop Chrome'] },
     },
   ],

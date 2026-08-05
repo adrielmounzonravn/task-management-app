@@ -11,6 +11,7 @@
     "codegen": "graphql-codegen --config codegen.ts",
     "lint": "eslint .",
     "test": "playwright test --project=mocked",
+    "test:live": "playwright test --project=live",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "prepare": "husky"
