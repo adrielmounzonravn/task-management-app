@@ -1,5 +1,10 @@
 import type { Page } from '@playwright/test'
-import type { DeleteTaskMutation, TasksQuery, UpdateTaskMutation } from '../../src/gql/graphql'
+import type {
+  CreateTaskMutation,
+  DeleteTaskMutation,
+  TasksQuery,
+  UpdateTaskMutation,
+} from '../../src/gql/graphql'
 import { tasksFixture } from '../../src/features/tasks/fixtures/tasks'
 
 const GRAPHQL_ENDPOINT = '**/graphql'
@@ -39,6 +44,30 @@ export async function mockTasksQuery(
     }
 
     await route.fulfill({ json: { data: { tasks: response.map(withTaskTypename) } } })
+  })
+}
+
+export async function mockCreateTaskMutation(
+  page: Page,
+  response: CreateTaskMutation | { errors: GraphQLError[] },
+) {
+  await page.route(GRAPHQL_ENDPOINT, async (route) => {
+    const request = route.request()
+    const body = request.postDataJSON() as { operationName?: string }
+
+    if (body.operationName !== 'CreateTask') {
+      await route.fallback()
+      return
+    }
+
+    if ('errors' in response) {
+      await route.fulfill({ json: { errors: response.errors } })
+      return
+    }
+
+    await route.fulfill({
+      json: { data: { createTask: withTaskTypename(response.createTask) } },
+    })
   })
 }
 
