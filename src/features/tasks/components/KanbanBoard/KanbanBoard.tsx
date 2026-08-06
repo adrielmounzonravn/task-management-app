@@ -3,6 +3,7 @@ import { STATUS_COLUMNS, getTasksByStatus } from '@/features/tasks/domain/status
 import { useTasks } from '@/features/tasks/api/useTasks'
 import { useTaskSearch } from '@/features/tasks/useTaskSearch'
 import { EmptyState } from '@/shared/ui/EmptyState/EmptyState'
+import { Toast, useToast } from '@/shared/ui/Toast/Toast'
 import styles from '@/features/tasks/components/KanbanBoard/KanbanBoard.module.css'
 
 type KanbanBoardProps = {
@@ -12,16 +13,25 @@ type KanbanBoardProps = {
 export function KanbanBoard({ assigneeId }: KanbanBoardProps) {
   const search = useTaskSearch()
   const tasks = useTasks({ name: search || undefined, assigneeId })
-
-  if (tasks.length === 0) {
-    return <EmptyState message="No results found." />
-  }
+  const { toast, showToast, hideToast } = useToast()
 
   return (
-    <div className={styles.board}>
-      {STATUS_COLUMNS.map(({ status, label }) => (
-        <TaskColumn key={status} label={label} tasks={getTasksByStatus(tasks, status)} />
-      ))}
-    </div>
+    <>
+      {tasks.length === 0 ? (
+        <EmptyState message="No results found." />
+      ) : (
+        <div className={styles.board}>
+          {STATUS_COLUMNS.map(({ status, label }) => (
+            <TaskColumn
+              key={status}
+              label={label}
+              tasks={getTasksByStatus(tasks, status)}
+              showToast={showToast}
+            />
+          ))}
+        </div>
+      )}
+      <Toast {...toast} onDismiss={hideToast} />
+    </>
   )
 }

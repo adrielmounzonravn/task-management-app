@@ -13,9 +13,10 @@ import styles from '@/features/tasks/components/TaskCard/TaskCard.module.css'
 
 type TaskCardProps = {
   task: Task
+  showToast: (message: string, type?: 'success' | 'error') => void
 }
 
-export function TaskCard({ task }: TaskCardProps) {
+export function TaskCard({ task, showToast }: TaskCardProps) {
   const { deleteTask, loading: deleting } = useDeleteTask()
   const [isEditOpen, setEditOpen] = useState(false)
   const [isDeleteOpen, setDeleteOpen] = useState(false)
@@ -23,8 +24,13 @@ export function TaskCard({ task }: TaskCardProps) {
   const closeDeleteModal = useCallback(() => setDeleteOpen(false), [])
 
   async function handleConfirmDelete() {
-    await deleteTask(task.id)
-    closeDeleteModal()
+    try {
+      await deleteTask(task.id)
+      closeDeleteModal()
+      showToast('Task deleted', 'success')
+    } catch {
+      showToast('Failed to delete task', 'error')
+    }
   }
 
   return (

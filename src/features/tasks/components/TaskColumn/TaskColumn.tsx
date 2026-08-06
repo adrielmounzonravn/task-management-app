@@ -5,9 +5,10 @@ import styles from '@/features/tasks/components/TaskColumn/TaskColumn.module.css
 type TaskColumnProps = {
   label: string
   tasks: Task[]
+  showToast: (message: string, type?: 'success' | 'error') => void
 }
 
-export function TaskColumn({ label, tasks }: TaskColumnProps) {
+export function TaskColumn({ label, tasks, showToast }: TaskColumnProps) {
   return (
     <div className={styles.column}>
       <span className={styles.title}>
@@ -15,7 +16,7 @@ export function TaskColumn({ label, tasks }: TaskColumnProps) {
       </span>
       <div className={styles.list}>
         {tasks.map((task) => (
-          <TaskCard key={task.id} task={task} />
+          <TaskCard key={task.id} task={task} showToast={showToast} />
         ))}
       </div>
     </div>
