@@ -6,6 +6,7 @@ import { DueDate } from '@/features/tasks/components/DueDate/DueDate'
 import { ProfilePhoto } from '@/shared/ui/ProfilePhoto/ProfilePhoto'
 import { Dropdown } from '@/shared/ui/Dropdown/Dropdown'
 import { TaskOptionsIcon, EditIcon, DeleteIcon } from '@/shared/ui/icons'
+import { ConfirmModal } from '@/shared/ui/ConfirmModal/ConfirmModal'
 import { POINT_ESTIMATE_LABELS } from '@/features/tasks/domain/pointEstimate'
 import { useDeleteTask } from '@/features/tasks/api/useDeleteTask'
 import styles from '@/features/tasks/components/TaskCard/TaskCard.module.css'
@@ -15,9 +16,16 @@ type TaskCardProps = {
 }
 
 export function TaskCard({ task }: TaskCardProps) {
-  const { deleteTask } = useDeleteTask()
+  const { deleteTask, loading: deleting } = useDeleteTask()
   const [isEditOpen, setEditOpen] = useState(false)
+  const [isDeleteOpen, setDeleteOpen] = useState(false)
   const closeEditModal = useCallback(() => setEditOpen(false), [])
+  const closeDeleteModal = useCallback(() => setDeleteOpen(false), [])
+
+  async function handleConfirmDelete() {
+    await deleteTask(task.id)
+    closeDeleteModal()
+  }
 
   return (
     <div className={styles.card} data-testid="task-card">
@@ -48,7 +56,7 @@ export function TaskCard({ task }: TaskCardProps) {
                   className={`${styles.menuItem} ${styles.menuItemDanger}`}
                   onClick={() => {
                     close()
-                    deleteTask(task.id)
+                    setDeleteOpen(true)
                   }}
                 >
                   <DeleteIcon />
@@ -73,6 +81,15 @@ export function TaskCard({ task }: TaskCardProps) {
         <span className={styles.assignee}>{task.assignee?.fullName ?? 'Unassigned'}</span>
       </div>
       <TaskFormModal task={task} open={isEditOpen} onClose={closeEditModal} />
+      <ConfirmModal
+        open={isDeleteOpen}
+        onClose={closeDeleteModal}
+        onConfirm={handleConfirmDelete}
+        title="Delete task"
+        description={`Are you sure you want to delete "${task.name}"? This action cannot be undone.`}
+        confirmLabel="Delete"
+        loading={deleting}
+      />
     </div>
   )
 }
