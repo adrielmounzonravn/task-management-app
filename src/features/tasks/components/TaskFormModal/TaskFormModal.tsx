@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useCreateTask } from '@/features/tasks/api/useCreateTask'
 import { useUpdateTask } from '@/features/tasks/api/useUpdateTask'
@@ -38,6 +39,7 @@ export function TaskFormModal({ open, onClose, task }: TaskFormModalProps) {
   const { createTask, loading: creating } = useCreateTask()
   const { updateTask, loading: updating } = useUpdateTask()
   const loading = creating || updating
+  const [submitError, setSubmitError] = useState<string | null>(null)
   const { register, handleSubmit, watch, setValue, reset } = useForm<FormValues>({
     defaultValues: {
       name: task?.name ?? '',
@@ -60,30 +62,40 @@ export function TaskFormModal({ open, onClose, task }: TaskFormModalProps) {
 
   function handleClose() {
     reset()
+    setSubmitError(null)
     onClose()
   }
 
   async function onSubmit(values: FormValues) {
-    if (task) {
-      await updateTask({
-        id: task.id,
-        name: values.name,
-        pointEstimate: values.pointEstimate,
-        tags: values.tags,
-        assigneeId: values.assigneeId,
-        dueDate: new Date(values.dueDate).toISOString(),
-      })
-    } else {
-      await createTask({
-        name: values.name,
-        pointEstimate: values.pointEstimate ?? 'ONE',
-        status: 'BACKLOG',
-        tags: values.tags,
-        assigneeId: values.assigneeId,
-        dueDate: new Date(values.dueDate).toISOString(),
-      })
+    setSubmitError(null)
+    try {
+      if (task) {
+        await updateTask({
+          id: task.id,
+          name: values.name,
+          pointEstimate: values.pointEstimate,
+          tags: values.tags,
+          assigneeId: values.assigneeId,
+          dueDate: new Date(values.dueDate).toISOString(),
+        })
+      } else {
+        await createTask({
+          name: values.name,
+          pointEstimate: values.pointEstimate ?? 'ONE',
+          status: 'BACKLOG',
+          tags: values.tags,
+          assigneeId: values.assigneeId,
+          dueDate: new Date(values.dueDate).toISOString(),
+        })
+      }
+      handleClose()
+    } catch {
+      setSubmitError(
+        task
+          ? 'Something went wrong updating this task.'
+          : 'Something went wrong creating this task.',
+      )
     }
-    handleClose()
   }
 
   return (
@@ -161,6 +173,8 @@ export function TaskFormModal({ open, onClose, task }: TaskFormModalProps) {
 
           <DatePicker value={dueDate} onChange={(value) => setValue('dueDate', value)} />
         </div>
+
+        {submitError && <p className={styles.formError}>{submitError}</p>}
 
         <div className={styles.footer}>
           <button type="button" className={styles.cancel} onClick={handleClose}>

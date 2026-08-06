@@ -25,6 +25,12 @@
   gap: var(--space-3);
 }
 
+.formError {
+  color: var(--color-text-on-chrome-subdued);
+  font-size: var(--font-size-body);
+  margin-top: var(--space-3);
+}
+
 .footer {
   display: flex;
   align-items: center;
