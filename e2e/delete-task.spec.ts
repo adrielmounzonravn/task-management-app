@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import type { Page } from '@playwright/test'
+import type { Page, Locator } from '@playwright/test'
 import { tasksFixture } from '../src/features/tasks/fixtures/tasks'
 import { mockDeleteTaskMutation, mockTasksQuery } from './mocks/graphql'
 
@@ -22,11 +22,35 @@ function cardNameLocator(page: Page, taskName: string) {
   return page.getByTestId('task-card-name').filter({ hasText: exactly(taskName) })
 }
 
-async function clickDelete(page: Page, taskName: string) {
+async function openDeleteDialog(page: Page, taskName: string): Promise<Locator> {
   const card = page.getByTestId('task-card').filter({ has: cardNameLocator(page, taskName) })
   await card.getByRole('button', { name: 'Task options' }).click()
   await page.getByRole('button', { name: 'Delete' }).click()
+  return page.getByRole('dialog')
 }
+
+async function confirmDelete(page: Page, taskName: string) {
+  const dialog = await openDeleteDialog(page, taskName)
+  await dialog.getByRole('button', { name: exactly('Delete') }).click()
+}
+
+test('clicking delete opens a confirmation dialog', async ({ page }) => {
+  const dialog = await openDeleteDialog(page, deletableTask.name)
+
+  await expect(dialog).toBeVisible()
+  await expect(dialog.getByText(deletableTask.name)).toBeVisible()
+  await expect(dialog.getByRole('button', { name: exactly('Delete') })).toBeVisible()
+  await expect(dialog.getByRole('button', { name: 'Cancel' })).toBeVisible()
+})
+
+test('cancelling the confirmation dialog leaves the card untouched', async ({ page }) => {
+  const dialog = await openDeleteDialog(page, deletableTask.name)
+
+  await dialog.getByRole('button', { name: 'Cancel' }).click()
+
+  await expect(dialog).toBeHidden()
+  await expect(cardNameLocator(page, deletableTask.name)).toBeVisible()
+})
 
 test('deleting a task removes its card from the board', async ({ page }) => {
   await expect(cardNameLocator(page, deletableTask.name)).toBeVisible()
@@ -34,11 +58,11 @@ test('deleting a task removes its card from the board', async ({ page }) => {
 
   await mockDeleteTaskMutation(page, { deleteTask: { id: deletableTask.id } })
 
-  // There is no confirmation modal: clicking "Delete" fires the mutation immediately.
-  await clickDelete(page, deletableTask.name)
+  await confirmDelete(page, deletableTask.name)
 
   await expect(cardNameLocator(page, deletableTask.name)).toHaveCount(0)
   await expect(page.getByTestId('task-card')).toHaveCount(totalCards - 1)
+  await expect(page.getByRole('status').filter({ hasText: 'Task deleted' })).toBeVisible()
 })
 
 test('deleting a task does not affect other cards on the board', async ({ page }) => {
@@ -49,21 +73,26 @@ test('deleting a task does not affect other cards on the board', async ({ page }
 
   await mockDeleteTaskMutation(page, { deleteTask: { id: deletableTask.id } })
 
-  await clickDelete(page, deletableTask.name)
+  await confirmDelete(page, deletableTask.name)
 
   await expect(cardNameLocator(page, deletableTask.name)).toHaveCount(0)
   await expect(cardNameLocator(page, otherTask.name)).toBeVisible()
 })
 
-test('a server error on delete keeps the card on the board', async ({ page }) => {
+test('a server error on delete keeps the card on the board and the dialog open', async ({
+  page,
+}) => {
   await mockDeleteTaskMutation(page, {
     errors: [{ message: 'Internal server error' }],
   })
 
-  await clickDelete(page, deletableTask.name)
+  const dialog = await openDeleteDialog(page, deletableTask.name)
+  await dialog.getByRole('button', { name: exactly('Delete') }).click()
 
-  // useDeleteTask's `update` callback only runs on a successful mutation response, so a
-  // rejected mutation never calls `cache.evict`. There's no error handling or optimistic
-  // removal, so the card is expected to remain exactly as it was.
+  // handleConfirmDelete only closes the dialog and shows a success toast when the mutation
+  // resolves. On a rejected mutation the dialog stays open (no auto-close) so the user can
+  // retry or cancel, and the card remains exactly as it was.
+  await expect(page.getByRole('status').filter({ hasText: 'Failed to delete task' })).toBeVisible()
+  await expect(dialog).toBeVisible()
   await expect(cardNameLocator(page, deletableTask.name)).toBeVisible()
 })
