@@ -50,6 +50,7 @@ test('editing a task updates its name on the board', async ({ page }) => {
   await expect(dialog).toBeHidden()
   await expect(cardNameLocator(page, newName)).toBeVisible()
   await expect(cardNameLocator(page, editableTask.name)).toHaveCount(0)
+  await expect(page.getByRole('status').filter({ hasText: 'Task updated' })).toBeVisible()
 })
 
 test('the submit button is disabled when the task name is cleared', async ({ page }) => {
@@ -80,6 +81,7 @@ test('a server error on update keeps the modal open and the card unchanged', asy
   await dialog.getByRole('button', { name: 'Update' }).click()
 
   await expect(page.getByText('Something went wrong updating this task.')).toBeVisible()
+  await expect(page.getByRole('status').filter({ hasText: 'Failed to update task' })).toBeVisible()
   await expect(dialog).toBeVisible()
   await expect(cardNameLocator(page, editableTask.name)).toBeVisible()
   await expect(cardNameLocator(page, newName)).toHaveCount(0)
