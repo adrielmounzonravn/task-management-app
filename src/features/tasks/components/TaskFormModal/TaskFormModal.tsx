@@ -5,13 +5,14 @@ import { useUpdateTask } from '@/features/tasks/api/useUpdateTask'
 import { AssigneeField } from '@/features/tasks/components/TaskFormModal/AssigneeField'
 import { TaskLabel } from '@/features/tasks/components/TaskLabel/TaskLabel'
 import { POINT_ESTIMATE_LABELS } from '@/features/tasks/domain/pointEstimate'
+import { STATUS_COLUMNS } from '@/features/tasks/domain/status'
 import { TAG_LABELS } from '@/features/tasks/domain/tags'
 import type { Task } from '@/features/tasks/fixtures/tasks'
 import { DatePicker } from '@/shared/ui/DatePicker/DatePicker'
 import { Dropdown } from '@/shared/ui/Dropdown/Dropdown'
 import { Modal } from '@/shared/ui/Modal/Modal'
-import { EstimateIcon, LabelIcon } from '@/shared/ui/icons'
-import type { PointEstimate, TaskTag } from '@/gql/graphql'
+import { BoardIcon, EstimateIcon, LabelIcon } from '@/shared/ui/icons'
+import type { PointEstimate, Status, TaskTag } from '@/gql/graphql'
 import styles from '@/features/tasks/components/TaskFormModal/TaskFormModal.module.css'
 
 const POINT_ESTIMATE_OPTIONS = Object.keys(POINT_ESTIMATE_LABELS) as PointEstimate[]
@@ -19,10 +20,12 @@ const TAG_OPTIONS = Object.keys(TAG_LABELS) as TaskTag[]
 
 type FormValues = {
   name: string
+  status: Status
   pointEstimate: PointEstimate | undefined
   tags: TaskTag[]
   assigneeId: string | undefined
   dueDate: string
+  position: number | undefined
 }
 
 function defaultDueDate(task: Task | undefined) {
@@ -40,17 +43,27 @@ export function TaskFormModal({ open, onClose, task }: TaskFormModalProps) {
   const { updateTask, loading: updating } = useUpdateTask()
   const loading = creating || updating
   const [submitError, setSubmitError] = useState<string | null>(null)
-  const { register, handleSubmit, watch, setValue, reset } = useForm<FormValues>({
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    reset,
+    formState: { errors },
+  } = useForm<FormValues>({
     defaultValues: {
       name: task?.name ?? '',
+      status: task?.status ?? 'BACKLOG',
       pointEstimate: task?.pointEstimate,
       tags: task?.tags ?? [],
       assigneeId: task?.assignee?.id,
       dueDate: defaultDueDate(task),
+      position: task?.position,
     },
   })
 
   const name = watch('name')
+  const status = watch('status')
   const pointEstimate = watch('pointEstimate')
   const tags = watch('tags')
   const assigneeId = watch('assigneeId')
@@ -73,16 +86,18 @@ export function TaskFormModal({ open, onClose, task }: TaskFormModalProps) {
         await updateTask({
           id: task.id,
           name: values.name,
+          status: values.status,
           pointEstimate: values.pointEstimate,
           tags: values.tags,
           assigneeId: values.assigneeId,
           dueDate: new Date(values.dueDate).toISOString(),
+          position: values.position === undefined ? undefined : Number(values.position),
         })
       } else {
         await createTask({
           name: values.name,
           pointEstimate: values.pointEstimate ?? 'ONE',
-          status: 'BACKLOG',
+          status: values.status,
           tags: values.tags,
           assigneeId: values.assigneeId,
           dueDate: new Date(values.dueDate).toISOString(),
@@ -110,6 +125,48 @@ export function TaskFormModal({ open, onClose, task }: TaskFormModalProps) {
         />
 
         <div className={styles.fields}>
+          <Dropdown>
+            <Dropdown.Trigger>
+              <BoardIcon />
+              {STATUS_COLUMNS.find((column) => column.status === status)?.label}
+            </Dropdown.Trigger>
+            <Dropdown.Panel>
+              {(close) =>
+                STATUS_COLUMNS.map((option) => (
+                  <button
+                    key={option.status}
+                    type="button"
+                    className={styles.option}
+                    onClick={() => {
+                      setValue('status', option.status)
+                      close()
+                    }}
+                  >
+                    {option.label}
+                  </button>
+                ))
+              }
+            </Dropdown.Panel>
+          </Dropdown>
+
+          {task && (
+            <span className={styles.positionField}>
+              <label htmlFor="task-position">Position</label>
+              <input
+                id="task-position"
+                type="text"
+                inputMode="numeric"
+                className={styles.position}
+                {...register('position', {
+                  pattern: /^[1-9]\d*$/,
+                  onChange: (event) => {
+                    event.target.value = event.target.value.replace(/\D/g, '')
+                  },
+                })}
+              />
+            </span>
+          )}
+
           <Dropdown>
             <Dropdown.Trigger>
               <EstimateIcon />
@@ -174,13 +231,20 @@ export function TaskFormModal({ open, onClose, task }: TaskFormModalProps) {
           <DatePicker value={dueDate} onChange={(value) => setValue('dueDate', value)} />
         </div>
 
+        {task && errors.position && (
+          <p className={styles.formError}>Position must be a positive whole number.</p>
+        )}
         {submitError && <p className={styles.formError}>{submitError}</p>}
 
         <div className={styles.footer}>
           <button type="button" className={styles.cancel} onClick={handleClose}>
             Cancel
           </button>
-          <button type="submit" className={styles.submit} disabled={!name.trim() || loading}>
+          <button
+            type="submit"
+            className={styles.submit}
+            disabled={!name.trim() || loading || (!!task && !!errors.position)}
+          >
             {task ? 'Update' : 'Create'}
           </button>
         </div>
