@@ -1,0 +1,9 @@
+.emptyState {
+  display: grid;
+  place-items: center;
+  padding: var(--space-8);
+  color: var(--color-text-on-chrome-subdued);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  text-align: center;
+}
