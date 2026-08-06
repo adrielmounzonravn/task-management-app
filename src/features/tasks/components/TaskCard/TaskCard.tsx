@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import type { Task } from '@/features/tasks/fixtures/tasks'
 import { TaskFormModal } from '@/features/tasks/components/TaskFormModal/TaskFormModal'
 import { TaskLabel } from '@/features/tasks/components/TaskLabel/TaskLabel'
@@ -17,6 +17,7 @@ type TaskCardProps = {
 export function TaskCard({ task }: TaskCardProps) {
   const { deleteTask } = useDeleteTask()
   const [isEditOpen, setEditOpen] = useState(false)
+  const closeEditModal = useCallback(() => setEditOpen(false), [])
 
   return (
     <div className={styles.card} data-testid="task-card">
@@ -71,7 +72,7 @@ export function TaskCard({ task }: TaskCardProps) {
         <ProfilePhoto size="sm" />
         <span className={styles.assignee}>{task.assignee?.fullName ?? 'Unassigned'}</span>
       </div>
-      {isEditOpen && <TaskFormModal task={task} open onClose={() => setEditOpen(false)} />}
+      <TaskFormModal task={task} open={isEditOpen} onClose={closeEditModal} />
     </div>
   )
 }

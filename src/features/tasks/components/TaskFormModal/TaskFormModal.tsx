@@ -11,6 +11,7 @@ import type { Task } from '@/features/tasks/fixtures/tasks'
 import { DatePicker } from '@/shared/ui/DatePicker/DatePicker'
 import { Dropdown } from '@/shared/ui/Dropdown/Dropdown'
 import { Modal } from '@/shared/ui/Modal/Modal'
+import { Toast, useToast } from '@/shared/ui/Toast/Toast'
 import { BoardIcon, EstimateIcon, LabelIcon } from '@/shared/ui/icons'
 import type { PointEstimate, Status, TaskTag } from '@/gql/graphql'
 import styles from '@/features/tasks/components/TaskFormModal/TaskFormModal.module.css'
@@ -43,6 +44,7 @@ export function TaskFormModal({ open, onClose, task }: TaskFormModalProps) {
   const { updateTask, loading: updating } = useUpdateTask()
   const loading = creating || updating
   const [submitError, setSubmitError] = useState<string | null>(null)
+  const { toast, showToast, hideToast } = useToast()
   const {
     register,
     handleSubmit,
@@ -93,6 +95,8 @@ export function TaskFormModal({ open, onClose, task }: TaskFormModalProps) {
           dueDate: new Date(values.dueDate).toISOString(),
           position: values.position === undefined ? undefined : Number(values.position),
         })
+        handleClose()
+        showToast('Task updated', 'success')
       } else {
         await createTask({
           name: values.name,
@@ -102,153 +106,157 @@ export function TaskFormModal({ open, onClose, task }: TaskFormModalProps) {
           assigneeId: values.assigneeId,
           dueDate: new Date(values.dueDate).toISOString(),
         })
+        handleClose()
       }
-      handleClose()
     } catch {
-      setSubmitError(
-        task
-          ? 'Something went wrong updating this task.'
-          : 'Something went wrong creating this task.',
-      )
+      if (task) {
+        setSubmitError('Something went wrong updating this task.')
+        showToast('Failed to update task', 'error')
+      } else {
+        setSubmitError('Something went wrong creating this task.')
+      }
     }
   }
 
   return (
-    <Modal open={open} onClose={handleClose} labelledBy="task-modal-title">
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <input
-          id="task-modal-title"
-          className={styles.title}
-          placeholder="Task Title"
-          autoFocus
-          {...register('name', { required: true })}
-        />
-
-        <div className={styles.fields}>
-          <Dropdown>
-            <Dropdown.Trigger>
-              <BoardIcon />
-              {STATUS_COLUMNS.find((column) => column.status === status)?.label}
-            </Dropdown.Trigger>
-            <Dropdown.Panel>
-              {(close) =>
-                STATUS_COLUMNS.map((option) => (
-                  <button
-                    key={option.status}
-                    type="button"
-                    className={styles.option}
-                    onClick={() => {
-                      setValue('status', option.status)
-                      close()
-                    }}
-                  >
-                    {option.label}
-                  </button>
-                ))
-              }
-            </Dropdown.Panel>
-          </Dropdown>
-
-          {task && (
-            <span className={styles.positionField}>
-              <label htmlFor="task-position">Position</label>
-              <input
-                id="task-position"
-                type="text"
-                inputMode="numeric"
-                className={styles.position}
-                {...register('position', {
-                  pattern: /^[1-9]\d*$/,
-                  onChange: (event) => {
-                    event.target.value = event.target.value.replace(/\D/g, '')
-                  },
-                })}
-              />
-            </span>
-          )}
-
-          <Dropdown>
-            <Dropdown.Trigger>
-              <EstimateIcon />
-              {pointEstimate ? POINT_ESTIMATE_LABELS[pointEstimate] : 'Estimate'}
-            </Dropdown.Trigger>
-            <Dropdown.Panel>
-              {(close) =>
-                POINT_ESTIMATE_OPTIONS.map((option) => (
-                  <button
-                    key={option}
-                    type="button"
-                    className={styles.option}
-                    onClick={() => {
-                      setValue('pointEstimate', option)
-                      close()
-                    }}
-                  >
-                    {POINT_ESTIMATE_LABELS[option]}
-                  </button>
-                ))
-              }
-            </Dropdown.Panel>
-          </Dropdown>
-
-          <AssigneeField
-            assigneeId={assigneeId}
-            onChange={(value) => setValue('assigneeId', value)}
+    <>
+      <Modal open={open} onClose={handleClose} labelledBy="task-modal-title">
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <input
+            id="task-modal-title"
+            className={styles.title}
+            placeholder="Task Title"
+            autoFocus
+            {...register('name', { required: true })}
           />
 
-          <Dropdown>
-            <Dropdown.Trigger>
-              <LabelIcon />
-              {tags.length === 0 ? (
-                'Label'
-              ) : (
-                <span className={styles.tags}>
-                  {tags.map((tag) => (
-                    <TaskLabel key={tag} tag={tag} />
-                  ))}
-                </span>
-              )}
-            </Dropdown.Trigger>
-            <Dropdown.Panel>
-              {(close) =>
-                TAG_OPTIONS.map((tag) => (
-                  <label
-                    key={tag}
-                    className={styles.checkboxOption}
-                    onClick={() => {
-                      toggleTag(tag)
-                      close()
-                    }}
-                  >
-                    <input type="checkbox" checked={tags.includes(tag)} readOnly />
-                    {TAG_LABELS[tag]}
-                  </label>
-                ))
-              }
-            </Dropdown.Panel>
-          </Dropdown>
+          <div className={styles.fields}>
+            <Dropdown>
+              <Dropdown.Trigger>
+                <BoardIcon />
+                {STATUS_COLUMNS.find((column) => column.status === status)?.label}
+              </Dropdown.Trigger>
+              <Dropdown.Panel>
+                {(close) =>
+                  STATUS_COLUMNS.map((option) => (
+                    <button
+                      key={option.status}
+                      type="button"
+                      className={styles.option}
+                      onClick={() => {
+                        setValue('status', option.status)
+                        close()
+                      }}
+                    >
+                      {option.label}
+                    </button>
+                  ))
+                }
+              </Dropdown.Panel>
+            </Dropdown>
 
-          <DatePicker value={dueDate} onChange={(value) => setValue('dueDate', value)} />
-        </div>
+            {task && (
+              <span className={styles.positionField}>
+                <label htmlFor="task-position">Position</label>
+                <input
+                  id="task-position"
+                  type="text"
+                  inputMode="numeric"
+                  className={styles.position}
+                  {...register('position', {
+                    pattern: /^[1-9]\d*$/,
+                    onChange: (event) => {
+                      event.target.value = event.target.value.replace(/\D/g, '')
+                    },
+                  })}
+                />
+              </span>
+            )}
 
-        {task && errors.position && (
-          <p className={styles.formError}>Position must be a positive whole number.</p>
-        )}
-        {submitError && <p className={styles.formError}>{submitError}</p>}
+            <Dropdown>
+              <Dropdown.Trigger>
+                <EstimateIcon />
+                {pointEstimate ? POINT_ESTIMATE_LABELS[pointEstimate] : 'Estimate'}
+              </Dropdown.Trigger>
+              <Dropdown.Panel>
+                {(close) =>
+                  POINT_ESTIMATE_OPTIONS.map((option) => (
+                    <button
+                      key={option}
+                      type="button"
+                      className={styles.option}
+                      onClick={() => {
+                        setValue('pointEstimate', option)
+                        close()
+                      }}
+                    >
+                      {POINT_ESTIMATE_LABELS[option]}
+                    </button>
+                  ))
+                }
+              </Dropdown.Panel>
+            </Dropdown>
 
-        <div className={styles.footer}>
-          <button type="button" className={styles.cancel} onClick={handleClose}>
-            Cancel
-          </button>
-          <button
-            type="submit"
-            className={styles.submit}
-            disabled={!name.trim() || loading || (!!task && !!errors.position)}
-          >
-            {task ? 'Update' : 'Create'}
-          </button>
-        </div>
-      </form>
-    </Modal>
+            <AssigneeField
+              assigneeId={assigneeId}
+              onChange={(value) => setValue('assigneeId', value)}
+            />
+
+            <Dropdown>
+              <Dropdown.Trigger>
+                <LabelIcon />
+                {tags.length === 0 ? (
+                  'Label'
+                ) : (
+                  <span className={styles.tags}>
+                    {tags.map((tag) => (
+                      <TaskLabel key={tag} tag={tag} />
+                    ))}
+                  </span>
+                )}
+              </Dropdown.Trigger>
+              <Dropdown.Panel>
+                {(close) =>
+                  TAG_OPTIONS.map((tag) => (
+                    <label
+                      key={tag}
+                      className={styles.checkboxOption}
+                      onClick={() => {
+                        toggleTag(tag)
+                        close()
+                      }}
+                    >
+                      <input type="checkbox" checked={tags.includes(tag)} readOnly />
+                      {TAG_LABELS[tag]}
+                    </label>
+                  ))
+                }
+              </Dropdown.Panel>
+            </Dropdown>
+
+            <DatePicker value={dueDate} onChange={(value) => setValue('dueDate', value)} />
+          </div>
+
+          {task && errors.position && (
+            <p className={styles.formError}>Position must be a positive whole number.</p>
+          )}
+          {submitError && <p className={styles.formError}>{submitError}</p>}
+
+          <div className={styles.footer}>
+            <button type="button" className={styles.cancel} onClick={handleClose}>
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className={styles.submit}
+              disabled={!name.trim() || loading || (!!task && !!errors.position)}
+            >
+              {task ? 'Update' : 'Create'}
+            </button>
+          </div>
+        </form>
+      </Modal>
+      <Toast {...toast} onDismiss={hideToast} />
+    </>
   )
 }
