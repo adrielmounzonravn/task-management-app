@@ -79,9 +79,7 @@ test('a server error on update keeps the modal open and the card unchanged', asy
 
   await dialog.getByRole('button', { name: 'Update' }).click()
 
-  // There is no error handling in TaskFormModal's onSubmit: it awaits updateTask with no
-  // try/catch, so a rejected mutation promise throws before handleClose() runs. The
-  // observable effect is that the dialog never closes and the card keeps its original name.
+  await expect(page.getByText('Something went wrong updating this task.')).toBeVisible()
   await expect(dialog).toBeVisible()
   await expect(cardNameLocator(page, editableTask.name)).toBeVisible()
   await expect(cardNameLocator(page, newName)).toHaveCount(0)
