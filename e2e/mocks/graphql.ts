@@ -18,7 +18,12 @@ function withTaskTypename<T extends TasksQuery['tasks'][number]>(task: T) {
   }
 }
 
-export async function mockTasksQuery(page: Page, tasks: TasksQuery['tasks'] = tasksFixture) {
+type GraphQLError = { message: string }
+
+export async function mockTasksQuery(
+  page: Page,
+  response: TasksQuery['tasks'] | { errors: GraphQLError[] } = tasksFixture,
+) {
   await page.route(GRAPHQL_ENDPOINT, async (route) => {
     const request = route.request()
     const body = request.postDataJSON() as { operationName?: string }
@@ -28,11 +33,14 @@ export async function mockTasksQuery(page: Page, tasks: TasksQuery['tasks'] = ta
       return
     }
 
-    await route.fulfill({ json: { data: { tasks: tasks.map(withTaskTypename) } } })
+    if ('errors' in response) {
+      await route.fulfill({ json: { errors: response.errors } })
+      return
+    }
+
+    await route.fulfill({ json: { data: { tasks: response.map(withTaskTypename) } } })
   })
 }
-
-type GraphQLError = { message: string }
 
 export async function mockUpdateTaskMutation(
   page: Page,
