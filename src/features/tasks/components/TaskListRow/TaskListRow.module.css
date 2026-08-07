@@ -9,16 +9,16 @@
   background-color: var(--color-background-chrome);
 }
 
-.past {
+.overdue {
   border-left-color: var(--color-status-overdue-surface);
 }
 
-.today {
-  border-left-color: var(--color-status-today-surface);
+.soon {
+  border-left-color: var(--color-status-soon-surface);
 }
 
-.future {
-  border-left-color: var(--color-text-success);
+.onTime {
+  border-left-color: var(--color-status-ontime-surface);
 }
 
 .name {

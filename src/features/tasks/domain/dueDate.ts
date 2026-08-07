@@ -1,4 +1,4 @@
-export type DueDateTone = 'past' | 'today' | 'future'
+export type DueDateTone = 'overdue' | 'soon' | 'onTime'
 
 const dayFormatter = new Intl.DateTimeFormat('en-US', { day: 'numeric', timeZone: 'UTC' })
 const monthFormatter = new Intl.DateTimeFormat('en-US', { month: 'long', timeZone: 'UTC' })
@@ -12,10 +12,10 @@ export function formatDueDate(dueDate: string): { label: string; tone: DueDateTo
   const due = new Date(dueDate)
   const diffDays = Math.round((startOfDayUtc(due) - startOfDayUtc(new Date())) / 86_400_000)
 
-  if (diffDays === 0) return { label: 'Today', tone: 'today' }
-  if (diffDays === -1) return { label: 'Yesterday', tone: 'past' }
-  if (diffDays === 1) return { label: 'Tomorrow', tone: 'future' }
+  if (diffDays === 0) return { label: 'Today', tone: 'soon' }
+  if (diffDays === -1) return { label: 'Yesterday', tone: 'overdue' }
+  if (diffDays === 1) return { label: 'Tomorrow', tone: 'soon' }
 
   const label = `${dayFormatter.format(due)} ${monthFormatter.format(due)}, ${yearFormatter.format(due)}`
-  return { label, tone: diffDays < 0 ? 'past' : 'future' }
+  return { label, tone: diffDays < 0 ? 'overdue' : 'onTime' }
 }

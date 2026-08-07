@@ -17,17 +17,17 @@
   flex-shrink: 0;
 }
 
-.past {
+.overdue {
   background-color: var(--color-status-overdue-surface);
   color: var(--color-status-overdue-text);
 }
 
-.today {
-  background-color: var(--color-status-today-surface);
-  color: var(--color-status-today-text);
+.soon {
+  background-color: var(--color-status-soon-surface);
+  color: var(--color-status-soon-text);
 }
 
-.future {
-  background-color: var(--color-status-upcoming-surface);
-  color: var(--color-status-upcoming-text);
+.onTime {
+  background-color: var(--color-status-ontime-surface);
+  color: var(--color-status-ontime-text);
 }

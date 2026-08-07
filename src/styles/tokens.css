@@ -101,8 +101,8 @@
   /* Status (due date indicator on the Task Card) */
   --color-status-overdue-surface: var(--color-interactive-critical);
   --color-status-overdue-text: var(--color-text-on-chrome);
-  --color-status-today-surface: var(--color-decorative-surface-one);
-  --color-status-today-text: var(--color-decorative-text-one);
-  --color-status-upcoming-surface: var(--color-background-chrome-elevated);
-  --color-status-upcoming-text: var(--color-text-on-chrome-subdued);
+  --color-status-soon-surface: var(--color-decorative-surface-one);
+  --color-status-soon-text: var(--color-decorative-text-one);
+  --color-status-ontime-surface: var(--color-action-primary-default);
+  --color-status-ontime-text: var(--color-text-on-chrome);
 }
