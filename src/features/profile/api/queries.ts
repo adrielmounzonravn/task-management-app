@@ -9,6 +9,7 @@ export const GET_PROFILE = graphql(`
       avatar
       type
       createdAt
+      updatedAt
     }
   }
 `)

@@ -31,6 +31,10 @@ export function ProfileDetails() {
           <dd className={styles.value}>{dateFormatter.format(new Date(profile.createdAt))}</dd>
         </div>
         <div className={styles.field}>
+          <dt className={styles.label}>Last updated</dt>
+          <dd className={styles.value}>{dateFormatter.format(new Date(profile.updatedAt))}</dd>
+        </div>
+        <div className={styles.field}>
           <dt className={styles.label}>User ID</dt>
           <dd className={styles.value}>{profile.id}</dd>
         </div>
