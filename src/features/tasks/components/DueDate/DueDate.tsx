@@ -10,7 +10,7 @@ export function DueDate({ dueDate }: DueDateProps) {
   const { label, tone } = formatDueDate(dueDate)
 
   return (
-    <span className={`${styles.dueDate} ${styles[tone]}`}>
+    <span className={`${styles.dueDate} ${styles[tone]}`} data-testid="due-date">
       <ClockIcon />
       {label}
     </span>

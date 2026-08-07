@@ -67,6 +67,61 @@ test('the submit button is disabled when the task name is cleared', async ({ pag
   await expect(cardNameLocator(page, editableTask.name)).toBeVisible()
 })
 
+test('editing a task due date changes the due-date pill color', async ({ page }) => {
+  // Pin "now" so the on-time/soon/overdue tone (computed relative to `new Date()` in
+  // dueDate.ts) is deterministic no matter when this test actually runs.
+  const fixedNow = new Date('2026-01-15T10:00:00.000Z')
+  const onTimeDueDate = new Date(Date.UTC(2026, 0, 20)) // 5 days after fixedNow -> onTime
+  const overdueDueDate = new Date(Date.UTC(2026, 0, 13)) // 2 days before fixedNow -> overdue
+
+  await page.clock.setFixedTime(fixedNow)
+  await mockTasksQuery(
+    page,
+    tasksFixture.map((task) =>
+      task.id === editableTask.id
+        ? { ...editableTask, dueDate: onTimeDueDate.toISOString() }
+        : task,
+    ),
+  )
+  await page.goto('/')
+
+  const card = page
+    .getByTestId('task-card')
+    .filter({ has: cardNameLocator(page, editableTask.name) })
+  const dueDatePill = card.getByTestId('due-date')
+
+  await expect(dueDatePill).toHaveCSS('background-color', 'rgb(0, 128, 96)')
+
+  const dialog = await openEditModal(page, editableTask.name)
+
+  // `timeZone: 'UTC'` keeps this label in sync with the DatePicker's rendering, which builds
+  // its label from the due date's UTC year/month/day components without ever converting them.
+  const currentDateLabel = onTimeDueDate.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    timeZone: 'UTC',
+  })
+  await dialog.getByRole('button', { name: currentDateLabel }).click()
+
+  const overdueDay = String(overdueDueDate.getUTCDate())
+  await page
+    .getByRole('button', { name: overdueDay, exact: true })
+    .and(page.locator('[data-in-month="true"]'))
+    .click()
+
+  await mockUpdateTaskMutation(page, {
+    updateTask: {
+      ...editableTask,
+      dueDate: overdueDueDate.toISOString(),
+    },
+  })
+
+  await dialog.getByRole('button', { name: 'Update' }).click()
+
+  await expect(dialog).toBeHidden()
+  await expect(dueDatePill).toHaveCSS('background-color', 'rgb(216, 44, 13)')
+})
+
 test('a server error on update keeps the modal open and the card unchanged', async ({ page }) => {
   const dialog = await openEditModal(page, editableTask.name)
 
