@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import { NavLink } from 'react-router'
 import { NotificationButton } from '@/shared/ui/NotificationButton/NotificationButton'
 import { ProfilePhoto } from '@/shared/ui/ProfilePhoto/ProfilePhoto'
@@ -7,9 +8,10 @@ import styles from './Topbar.module.css'
 type TopbarProps = {
   searchValue: string
   onSearchChange: (value: string) => void
+  filters?: ReactNode
 }
 
-export function Topbar({ searchValue, onSearchChange }: TopbarProps) {
+export function Topbar({ searchValue, onSearchChange, filters }: TopbarProps) {
   return (
     <header className={styles.topbar}>
       <div className={styles.searchWrapper}>
@@ -24,6 +26,7 @@ export function Topbar({ searchValue, onSearchChange }: TopbarProps) {
           onChange={(event) => onSearchChange(event.currentTarget.value)}
         />
       </div>
+      {filters}
       <div className={styles.actions}>
         <NotificationButton />
         <NavLink to="/settings" aria-label="Settings">

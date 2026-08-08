@@ -1,6 +1,7 @@
 import { TaskColumn } from '@/features/tasks/components/TaskColumn/TaskColumn'
 import { STATUS_COLUMNS, getTasksByStatus } from '@/features/tasks/domain/status'
 import { useTasks } from '@/features/tasks/api/useTasks'
+import { useTaskFilters } from '@/features/tasks/useTaskFilters'
 import { useTaskSearch } from '@/features/tasks/useTaskSearch'
 import { EmptyState } from '@/shared/ui/EmptyState/EmptyState'
 import { Toast, useToast } from '@/shared/ui/Toast/Toast'
@@ -12,7 +13,14 @@ type KanbanBoardProps = {
 
 export function KanbanBoard({ assigneeId }: KanbanBoardProps) {
   const search = useTaskSearch()
-  const tasks = useTasks({ name: search || undefined, assigneeId })
+  const { status, tags, pointEstimate } = useTaskFilters()
+  const tasks = useTasks({
+    name: search || undefined,
+    assigneeId,
+    status,
+    tags: tags.length > 0 ? tags : undefined,
+    pointEstimate,
+  })
   const { toast, showToast, hideToast } = useToast()
 
   return (

@@ -1,6 +1,7 @@
 import { TaskListGroup } from '@/features/tasks/components/TaskListGroup/TaskListGroup'
 import { STATUS_COLUMNS, getTasksByStatus } from '@/features/tasks/domain/status'
 import { useTasks } from '@/features/tasks/api/useTasks'
+import { useTaskFilters } from '@/features/tasks/useTaskFilters'
 import { useTaskSearch } from '@/features/tasks/useTaskSearch'
 import { EmptyState } from '@/shared/ui/EmptyState/EmptyState'
 import styles from '@/features/tasks/components/TaskList/TaskList.module.css'
@@ -11,7 +12,14 @@ type TaskListProps = {
 
 export function TaskList({ assigneeId }: TaskListProps) {
   const search = useTaskSearch()
-  const tasks = useTasks({ name: search || undefined, assigneeId })
+  const { status, tags, pointEstimate } = useTaskFilters()
+  const tasks = useTasks({
+    name: search || undefined,
+    assigneeId,
+    status,
+    tags: tags.length > 0 ? tags : undefined,
+    pointEstimate,
+  })
 
   if (tasks.length === 0) {
     return <EmptyState message="No results found." />
