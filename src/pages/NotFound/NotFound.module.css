@@ -1,0 +1,18 @@
+.container {
+  display: grid;
+  place-items: center;
+  gap: var(--space-3);
+  padding: var(--space-8);
+  text-align: center;
+}
+
+.heading {
+  color: var(--color-text-on-chrome);
+  font-size: var(--font-size-heading);
+  line-height: var(--line-height-heading);
+  font-weight: var(--font-weight-heading);
+}
+
+.link {
+  color: var(--color-accent-default);
+}
