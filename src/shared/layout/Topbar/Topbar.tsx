@@ -9,9 +9,10 @@ type TopbarProps = {
   searchValue: string
   onSearchChange: (value: string) => void
   filters?: ReactNode
+  profilePhoto?: ReactNode
 }
 
-export function Topbar({ searchValue, onSearchChange, filters }: TopbarProps) {
+export function Topbar({ searchValue, onSearchChange, filters, profilePhoto }: TopbarProps) {
   return (
     <header className={styles.topbar}>
       <div className={styles.searchWrapper}>
@@ -30,7 +31,7 @@ export function Topbar({ searchValue, onSearchChange, filters }: TopbarProps) {
       <div className={styles.actions}>
         <NotificationButton />
         <NavLink to="/settings" aria-label="Settings">
-          <ProfilePhoto />
+          {profilePhoto ?? <ProfilePhoto />}
         </NavLink>
       </div>
     </header>

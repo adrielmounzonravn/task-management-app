@@ -1,16 +1,28 @@
+import { Suspense } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router'
 import { AppLayout } from '@/shared/layout/AppLayout/AppLayout'
+import { ProfilePhoto } from '@/shared/ui/ProfilePhoto/ProfilePhoto'
 import { Dashboard } from '@/pages/Dashboard/Dashboard'
 import { MyTasks } from '@/pages/MyTasks/MyTasks'
 import { Settings } from '@/pages/Settings/Settings'
 import { NotFound } from '@/pages/NotFound/NotFound'
 import { TaskFilters } from '@/features/tasks/components/TaskFilters/TaskFilters'
+import { ProfileAvatar } from '@/features/profile/components/ProfileAvatar/ProfileAvatar'
 import { useTaskSearchInput } from '@/features/tasks/useTaskSearchInput'
 
 function AppLayoutWithSearch() {
   const { inputValue, setInputValue } = useTaskSearchInput()
   return (
-    <AppLayout searchValue={inputValue} onSearchChange={setInputValue} filters={<TaskFilters />} />
+    <AppLayout
+      searchValue={inputValue}
+      onSearchChange={setInputValue}
+      filters={<TaskFilters />}
+      profilePhoto={
+        <Suspense fallback={<ProfilePhoto />}>
+          <ProfileAvatar />
+        </Suspense>
+      }
+    />
   )
 }
 
