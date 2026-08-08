@@ -1,7 +1,12 @@
 import { expect, test } from '@playwright/test'
 import type { Locator, Page } from '@playwright/test'
 import { tasksFixture } from '../src/features/tasks/fixtures/tasks'
-import { mockCreateTaskMutation, mockTasksQuery, mockUpdateTaskMutation } from './mocks/graphql'
+import {
+  mockCreateTaskMutation,
+  mockProfileQuery,
+  mockTasksQuery,
+  mockUpdateTaskMutation,
+} from './mocks/graphql'
 
 // Covers the `status` dropdown and `position` input added to TaskFormModal. `edit-task.spec.ts`
 // and `create-task.spec.ts` already cover the `name` field end-to-end (success, server error,
@@ -18,6 +23,7 @@ function exactly(text: string) {
 }
 
 test.beforeEach(async ({ page }) => {
+  await mockProfileQuery(page)
   await mockTasksQuery(page)
   await page.goto('/')
 })

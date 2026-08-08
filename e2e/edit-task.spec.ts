@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test'
 import type { Page } from '@playwright/test'
 import { tasksFixture } from '../src/features/tasks/fixtures/tasks'
-import { mockTasksQuery, mockUpdateTaskMutation } from './mocks/graphql'
+import { mockProfileQuery, mockTasksQuery, mockUpdateTaskMutation } from './mocks/graphql'
 
 const editableTask = tasksFixture.find((task) => task.id === 'task-12')
 
@@ -14,6 +14,7 @@ function exactly(text: string) {
 }
 
 test.beforeEach(async ({ page }) => {
+  await mockProfileQuery(page)
   await mockTasksQuery(page)
   await page.goto('/')
 })

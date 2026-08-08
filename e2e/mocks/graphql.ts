@@ -2,12 +2,42 @@ import type { Page } from '@playwright/test'
 import type {
   CreateTaskMutation,
   DeleteTaskMutation,
+  ProfileQuery,
   TasksQuery,
   UpdateTaskMutation,
 } from '../../src/gql/graphql'
 import { tasksFixture } from '../../src/features/tasks/fixtures/tasks'
 
 const GRAPHQL_ENDPOINT = '**/graphql'
+
+const profileFixture: ProfileQuery['profile'] = {
+  id: '2adcaf27-5de6-4500-b795-166f482fdace',
+  fullName: 'Adriel Mounzón',
+  email: 'adriel@example.com',
+  avatar: null,
+  type: 'ADMIN',
+  createdAt: '2026-01-01T00:00:00.000Z',
+  updatedAt: '2026-01-01T00:00:00.000Z',
+}
+
+export async function mockProfileQuery(
+  page: Page,
+  response: ProfileQuery['profile'] = profileFixture,
+) {
+  await page.route(GRAPHQL_ENDPOINT, async (route) => {
+    const request = route.request()
+    const body = request.postDataJSON() as { operationName?: string }
+
+    if (body.operationName !== 'Profile') {
+      await route.fallback()
+      return
+    }
+
+    await route.fulfill({
+      json: { data: { profile: { ...response, __typename: 'User' as const } } },
+    })
+  })
+}
 
 // The real API adds `__typename` to every object because Apollo Client's HttpLink transforms
 // outgoing queries to request it, regardless of what the hand-written document asks for. That

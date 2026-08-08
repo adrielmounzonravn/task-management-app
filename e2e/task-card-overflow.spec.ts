@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 import { tasksFixture } from '../src/features/tasks/fixtures/tasks'
-import { mockTasksQuery } from './mocks/graphql'
+import { mockProfileQuery, mockTasksQuery } from './mocks/graphql'
 
 const shortNameTask = tasksFixture.find((task) => task.id === 'task-12')
 const longNameTask = tasksFixture.find((task) => task.id === 'task-11')
@@ -14,6 +14,7 @@ function exactly(text: string) {
 }
 
 test.beforeEach(async ({ page }) => {
+  await mockProfileQuery(page)
   await mockTasksQuery(page)
   await page.goto('/')
 })

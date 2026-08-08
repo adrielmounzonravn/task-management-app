@@ -1,9 +1,10 @@
 import { expect, test } from '@playwright/test'
 import type { Page } from '@playwright/test'
 import { tasksFixture } from '../src/features/tasks/fixtures/tasks'
-import { mockTasksQuery } from './mocks/graphql'
+import { mockProfileQuery, mockTasksQuery } from './mocks/graphql'
 
 test.beforeEach(async ({ page }) => {
+  await mockProfileQuery(page)
   await mockTasksQuery(page, tasksFixture)
   await page.goto('/')
   await expect(page.getByTestId('task-card').first()).toBeVisible()

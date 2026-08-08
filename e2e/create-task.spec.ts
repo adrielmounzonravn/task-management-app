@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test'
 import type { Page } from '@playwright/test'
 import { tasksFixture } from '../src/features/tasks/fixtures/tasks'
-import { mockCreateTaskMutation, mockTasksQuery } from './mocks/graphql'
+import { mockCreateTaskMutation, mockProfileQuery, mockTasksQuery } from './mocks/graphql'
 
 const newTaskName = 'Write onboarding docs for the mobile team'
 
@@ -17,6 +17,7 @@ const createdTask = {
 }
 
 test.beforeEach(async ({ page }) => {
+  await mockProfileQuery(page)
   await mockTasksQuery(page)
   await page.goto('/')
 })
