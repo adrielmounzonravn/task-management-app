@@ -6,9 +6,10 @@ import styles from '@/features/tasks/components/TaskListGroup/TaskListGroup.modu
 type TaskListGroupProps = {
   label: string
   tasks: Task[]
+  showToast: (message: string, type?: 'success' | 'error') => void
 }
 
-export function TaskListGroup({ label, tasks }: TaskListGroupProps) {
+export function TaskListGroup({ label, tasks, showToast }: TaskListGroupProps) {
   const [isExpanded, setIsExpanded] = useState(true)
 
   return (
@@ -27,7 +28,7 @@ export function TaskListGroup({ label, tasks }: TaskListGroupProps) {
       {isExpanded && (
         <div className={styles.rows}>
           {tasks.map((task) => (
-            <TaskListRow key={task.id} task={task} />
+            <TaskListRow key={task.id} task={task} showToast={showToast} />
           ))}
         </div>
       )}

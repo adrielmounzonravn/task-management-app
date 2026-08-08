@@ -4,6 +4,7 @@ import { useTasks } from '@/features/tasks/api/useTasks'
 import { useTaskFilters } from '@/features/tasks/useTaskFilters'
 import { useTaskSearch } from '@/features/tasks/useTaskSearch'
 import { EmptyState } from '@/shared/ui/EmptyState/EmptyState'
+import { Toast, useToast } from '@/shared/ui/Toast/Toast'
 import styles from '@/features/tasks/components/TaskList/TaskList.module.css'
 
 type TaskListProps = {
@@ -20,23 +21,33 @@ export function TaskList({ assigneeId }: TaskListProps) {
     tags: tags.length > 0 ? tags : undefined,
     pointEstimate,
   })
+  const { toast, showToast, hideToast } = useToast()
 
   if (tasks.length === 0) {
     return <EmptyState message="No results found." />
   }
 
   return (
-    <div role="table" className={styles.list}>
-      <div role="row" className={styles.header}>
-        <span role="columnheader">Task Name</span>
-        <span role="columnheader">Task Tags</span>
-        <span role="columnheader">Estimate</span>
-        <span role="columnheader">Task Assign Name</span>
-        <span role="columnheader">Due Date</span>
+    <>
+      <div role="table" className={styles.list}>
+        <div role="row" className={styles.header}>
+          <span role="columnheader" aria-hidden="true" />
+          <span role="columnheader">Task Name</span>
+          <span role="columnheader">Task Tags</span>
+          <span role="columnheader">Estimate</span>
+          <span role="columnheader">Task Assign Name</span>
+          <span role="columnheader">Due Date</span>
+        </div>
+        {STATUS_COLUMNS.map(({ status, label }) => (
+          <TaskListGroup
+            key={status}
+            label={label}
+            tasks={getTasksByStatus(tasks, status)}
+            showToast={showToast}
+          />
+        ))}
       </div>
-      {STATUS_COLUMNS.map(({ status, label }) => (
-        <TaskListGroup key={status} label={label} tasks={getTasksByStatus(tasks, status)} />
-      ))}
-    </div>
+      <Toast {...toast} onDismiss={hideToast} />
+    </>
   )
 }
