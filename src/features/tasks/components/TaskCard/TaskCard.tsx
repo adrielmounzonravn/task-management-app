@@ -83,7 +83,7 @@ export function TaskCard({ task, showToast }: TaskCardProps) {
         ))}
       </div>
       <div className={styles.footer}>
-        <ProfilePhoto size="sm" />
+        <ProfilePhoto size="sm" userId={task.assignee?.id} />
         <span className={styles.assignee}>{task.assignee?.fullName ?? 'Unassigned'}</span>
       </div>
       <TaskFormModal task={task} open={isEditOpen} onClose={closeEditModal} />

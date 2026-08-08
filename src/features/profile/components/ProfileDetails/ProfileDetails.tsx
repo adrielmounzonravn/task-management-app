@@ -15,7 +15,7 @@ export function ProfileDetails() {
   return (
     <div className={styles.card}>
       <div className={styles.header}>
-        <ProfilePhoto />
+        <ProfilePhoto userId={profile.id} photoUrl={profile.avatar} />
         <div>
           <p className={styles.name}>{profile.fullName}</p>
           <p className={styles.email}>{profile.email}</p>
