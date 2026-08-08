@@ -2,7 +2,6 @@ import { useUsers } from '@/features/tasks/api/useUsers'
 import { Dropdown } from '@/shared/ui/Dropdown/Dropdown'
 import { Spinner } from '@/shared/ui/Spinner/Spinner'
 import { AssigneeIcon } from '@/shared/ui/icons'
-import styles from '@/features/tasks/components/TaskFormModal/TaskFormModal.module.css'
 
 type AssigneeFieldProps = {
   assigneeId: string | undefined
@@ -27,17 +26,15 @@ export function AssigneeField({ assigneeId, onChange }: AssigneeFieldProps) {
       <Dropdown.Panel>
         {(close) =>
           users.map((user) => (
-            <button
+            <Dropdown.Option
               key={user.id}
-              type="button"
-              className={styles.option}
-              onClick={() => {
+              onSelect={() => {
                 onChange(user.id)
                 close()
               }}
             >
               {user.fullName}
-            </button>
+            </Dropdown.Option>
           ))
         }
       </Dropdown.Panel>

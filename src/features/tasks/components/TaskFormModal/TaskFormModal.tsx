@@ -139,17 +139,15 @@ export function TaskFormModal({ open, onClose, task }: TaskFormModalProps) {
               <Dropdown.Panel>
                 {(close) =>
                   STATUS_COLUMNS.map((option) => (
-                    <button
+                    <Dropdown.Option
                       key={option.status}
-                      type="button"
-                      className={styles.option}
-                      onClick={() => {
+                      onSelect={() => {
                         setValue('status', option.status)
                         close()
                       }}
                     >
                       {option.label}
-                    </button>
+                    </Dropdown.Option>
                   ))
                 }
               </Dropdown.Panel>
@@ -181,17 +179,15 @@ export function TaskFormModal({ open, onClose, task }: TaskFormModalProps) {
               <Dropdown.Panel>
                 {(close) =>
                   POINT_ESTIMATE_OPTIONS.map((option) => (
-                    <button
+                    <Dropdown.Option
                       key={option}
-                      type="button"
-                      className={styles.option}
-                      onClick={() => {
+                      onSelect={() => {
                         setValue('pointEstimate', option)
                         close()
                       }}
                     >
                       {POINT_ESTIMATE_LABELS[option]}
-                    </button>
+                    </Dropdown.Option>
                   ))
                 }
               </Dropdown.Panel>
@@ -218,17 +214,16 @@ export function TaskFormModal({ open, onClose, task }: TaskFormModalProps) {
               <Dropdown.Panel>
                 {(close) =>
                   TAG_OPTIONS.map((tag) => (
-                    <label
+                    <Dropdown.CheckboxOption
                       key={tag}
-                      className={styles.checkboxOption}
-                      onClick={() => {
+                      checked={tags.includes(tag)}
+                      onSelect={() => {
                         toggleTag(tag)
                         close()
                       }}
                     >
-                      <input type="checkbox" checked={tags.includes(tag)} readOnly />
                       {TAG_LABELS[tag]}
-                    </label>
+                    </Dropdown.CheckboxOption>
                   ))
                 }
               </Dropdown.Panel>

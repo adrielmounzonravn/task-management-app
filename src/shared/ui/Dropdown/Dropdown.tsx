@@ -152,3 +152,35 @@ Dropdown.Panel = function DropdownPanel({ children }: DropdownPanelProps) {
     document.body,
   )
 }
+
+type DropdownOptionProps = {
+  children: ReactNode
+  onSelect: () => void
+}
+
+Dropdown.Option = function DropdownOption({ children, onSelect }: DropdownOptionProps) {
+  return (
+    <button type="button" className={styles.option} onClick={onSelect}>
+      {children}
+    </button>
+  )
+}
+
+type DropdownCheckboxOptionProps = {
+  children: ReactNode
+  checked: boolean
+  onSelect: () => void
+}
+
+Dropdown.CheckboxOption = function DropdownCheckboxOption({
+  children,
+  checked,
+  onSelect,
+}: DropdownCheckboxOptionProps) {
+  return (
+    <label className={styles.checkboxOption} onClick={onSelect}>
+      <input type="checkbox" checked={checked} readOnly />
+      {children}
+    </label>
+  )
+}

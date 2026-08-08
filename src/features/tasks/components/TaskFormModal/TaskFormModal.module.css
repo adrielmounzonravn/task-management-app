@@ -72,32 +72,6 @@
   gap: var(--space-1);
 }
 
-.option {
-  display: block;
-  width: 100%;
-  border: none;
-  background: none;
-  color: var(--color-text-on-chrome);
-  font-size: var(--font-size-body);
-  text-align: left;
-  padding: var(--space-2) var(--space-3);
-  cursor: pointer;
-  border-radius: var(--radius-small);
-}
-
-.option:hover {
-  background: var(--color-background-chrome);
-}
-
-.checkboxOption {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  color: var(--color-text-on-chrome);
-  padding: var(--space-2) var(--space-3);
-  cursor: pointer;
-}
-
 .positionField {
   display: inline-flex;
   align-items: center;
