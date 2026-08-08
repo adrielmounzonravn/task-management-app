@@ -23,7 +23,7 @@ function withTaskTypename<T extends TasksQuery['tasks'][number]>(task: T) {
   }
 }
 
-type GraphQLError = { message: string }
+type GraphQLError = { message: string; extensions?: { code: string } }
 
 export async function mockTasksQuery(
   page: Page,

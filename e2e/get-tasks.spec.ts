@@ -10,6 +10,19 @@ test('a server error loading tasks shows an error state with a Retry button', as
   await expect(page.getByRole('button', { name: 'Retry' })).toBeVisible()
 })
 
+test('an UNAUTHENTICATED error loading tasks shows a token-specific error state', async ({
+  page,
+}) => {
+  await mockTasksQuery(page, {
+    errors: [{ message: 'Unauthenticated', extensions: { code: 'UNAUTHENTICATED' } }],
+  })
+  await page.goto('/')
+
+  await expect(page.getByText('Your session token is missing or invalid.')).toBeVisible()
+  await expect(page.getByText('Something went wrong loading tasks.')).toHaveCount(0)
+  await expect(page.getByRole('button', { name: 'Retry' })).toBeVisible()
+})
+
 test('Retry recovers the board once the Tasks query succeeds', async ({ page }) => {
   await mockTasksQuery(page, { errors: [{ message: 'Internal server error' }] })
   await page.goto('/')
