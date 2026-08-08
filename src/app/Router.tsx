@@ -1,4 +1,5 @@
 import { Suspense } from 'react'
+import { ErrorBoundary } from 'react-error-boundary'
 import { BrowserRouter, Route, Routes } from 'react-router'
 import { AppLayout } from '@/shared/layout/AppLayout/AppLayout'
 import { ProfilePhoto } from '@/shared/ui/ProfilePhoto/ProfilePhoto'
@@ -18,9 +19,11 @@ function AppLayoutWithSearch() {
       onSearchChange={setInputValue}
       filters={<TaskFilters />}
       profilePhoto={
-        <Suspense fallback={<ProfilePhoto />}>
-          <ProfileAvatar />
-        </Suspense>
+        <ErrorBoundary fallback={<ProfilePhoto />}>
+          <Suspense fallback={<ProfilePhoto />}>
+            <ProfileAvatar />
+          </Suspense>
+        </ErrorBoundary>
       }
     />
   )
